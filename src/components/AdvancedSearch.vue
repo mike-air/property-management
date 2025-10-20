@@ -3,9 +3,9 @@
     <!-- Hero Search Section -->
     <div class="relative rounded-xl shadow-lg overflow-hidden">
       <!-- Background Image -->
-      <div class="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-blue-700/90">
-        <img
-          src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      <div class="absolute inset-0 bg-linear-to-r from-gray-800 to-gray-900">
+        <img 
+          src="/hero.jpg"
           alt="Property search background"
           class="w-full h-full object-cover opacity-20"
         />
@@ -273,7 +273,6 @@ import { ref, computed, watch } from 'vue'
 import { Search, DollarSign, Home, Bookmark } from 'lucide-vue-next'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Button } from './ui/button'
-import { Input } from './ui/input'
 import { Label } from './ui/label'
 
 // Props
