@@ -147,20 +147,32 @@ const handleSaveSearch = (filters: SearchFilters) => {
 <template>
   <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Header -->
-      <div class="mb-8">
-        <div class="flex justify-between items-center">
-          <div>
-            <h1 class="text-3xl font-bold text-gray-900">Properties</h1>
-            <p class="mt-2 text-gray-600">Manage your property portfolio</p>
+      <!-- Header with Background Image -->
+      <div class="relative mb-8 rounded-xl overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-blue-700/90">
+          <img
+            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Property management background"
+            class="w-full h-full object-cover opacity-20"
+          />
+        </div>
+        
+        <!-- Content -->
+        <div class="relative px-8 py-12">
+          <div class="flex justify-between items-center">
+            <div>
+              <h1 class="text-4xl font-bold text-white mb-2">Properties</h1>
+              <p class="text-xl text-blue-100">Manage your property portfolio</p>
+            </div>
+            <button 
+              @click="router.push('/properties/add')" 
+              class="flex items-center space-x-2 px-6 py-3 bg-white hover:bg-gray-50 text-blue-600 font-semibold rounded-lg transition-colors shadow-lg"
+            >
+              <Plus class="h-5 w-5" />
+              <span>Add Property</span>
+            </button>
           </div>
-          <button 
-            @click="router.push('/properties/add')" 
-            class="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-          >
-            <Plus class="h-4 w-4" />
-            <span>Add Property</span>
-          </button>
         </div>
       </div>
 
