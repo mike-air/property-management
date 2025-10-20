@@ -1,0 +1,118 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@example.com",
+      "password": "password",
+      "token": "fake-jwt-token"
+    },
+    {
+      "id": "2",
+      "email": "manager@example.com",
+      "password": "manager123",
+      "token": "fake-jwt-token-manager"
+    }
+  ],
+  "properties": [
+    {
+      "id": "1",
+      "name": "Ocean View Apartment",
+      "type": "rental",
+      "owner": "John Doe",
+      "price": 2400,
+      "status": "occupied",
+      "latitude": 37.7749,
+      "longitude": -122.4194,
+      "description": "Beautiful ocean view apartment with modern amenities",
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "squareFeet": 1200,
+      "address": "123 Ocean Drive, San Francisco, CA",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "2",
+      "name": "Downtown Loft",
+      "type": "sale",
+      "owner": "Jane Smith",
+      "price": 300000,
+      "status": "available",
+      "latitude": 34.0522,
+      "longitude": -118.2437,
+      "description": "Modern loft in the heart of downtown",
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "squareFeet": 800,
+      "address": "456 Main Street, Los Angeles, CA",
+      "createdAt": "2024-01-10T14:20:00Z",
+      "updatedAt": "2024-01-10T14:20:00Z"
+    },
+    {
+      "id": "3",
+      "name": "Suburban Family Home",
+      "type": "sale",
+      "owner": "Mike Johnson",
+      "price": 450000,
+      "status": "available",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "description": "Spacious family home with large backyard",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "squareFeet": 1800,
+      "address": "789 Oak Avenue, New York, NY",
+      "createdAt": "2024-01-05T09:15:00Z",
+      "updatedAt": "2024-01-05T09:15:00Z"
+    },
+    {
+      "id": "4",
+      "name": "City Center Studio",
+      "type": "rental",
+      "owner": "Sarah Wilson",
+      "price": 1800,
+      "status": "occupied",
+      "latitude": 41.8781,
+      "longitude": -87.6298,
+      "description": "Cozy studio apartment in the city center",
+      "bedrooms": 0,
+      "bathrooms": 1,
+      "squareFeet": 500,
+      "address": "321 State Street, Chicago, IL",
+      "createdAt": "2024-01-20T16:45:00Z",
+      "updatedAt": "2024-01-20T16:45:00Z"
+    },
+    {
+      "id": "5",
+      "name": "Luxury Penthouse",
+      "type": "sale",
+      "owner": "David Brown",
+      "price": 1200000,
+      "status": "available",
+      "latitude": 25.7617,
+      "longitude": -80.1918,
+      "description": "Luxurious penthouse with panoramic city views",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "squareFeet": 3000,
+      "address": "555 Brickell Avenue, Miami, FL",
+      "createdAt": "2024-01-25T11:30:00Z",
+      "updatedAt": "2024-01-25T11:30:00Z"
+    },
+    {
+      "id": "39a6",
+      "name": "Debitis repellendus",
+      "type": "sale",
+      "owner": "Consectetur aliquip ",
+      "price": 11,
+      "status": "occupied",
+      "latitude": 17,
+      "longitude": 61,
+      "description": "Iure et sapiente min",
+      "bedrooms": 96,
+      "bathrooms": 6,
+      "squareFeet": 47,
+      "address": "Quos libero quam qui"
+    }
+  ]
+}

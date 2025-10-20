@@ -1,0 +1,90 @@
+import { ref, computed } from 'vue'
+import { defineStore } from 'pinia'
+import { apiService, type LoginRequest, type User } from '../services/api'
+
+// Type for authenticated user (without password)
+type AuthenticatedUser = Omit<User, 'password'>
+
+export const useAuthStore = defineStore('auth', () => {
+  // State
+  const user = ref<AuthenticatedUser | null>(null)
+  const token = ref<string | null>(null)
+  const isLoading = ref(false)
+  const error = ref<string | null>(null)
+
+  // Getters
+  const isAuthenticated = computed(() => !!token.value && !!user.value)
+  const userEmail = computed(() => user.value?.email || '')
+
+  // Actions
+  const login = async (credentials: LoginRequest) => {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const response = await apiService.login(credentials)
+
+      // Store token and user data
+      token.value = response.token
+      user.value = response.user
+
+      // Persist token to localStorage
+      apiService.setAuthToken(response.token)
+
+      return response
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Login failed'
+      error.value = errorMessage
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const logout = async () => {
+    try {
+      await apiService.logout()
+    } finally {
+      // Clear local state
+      user.value = null
+      token.value = null
+      error.value = null
+    }
+  }
+
+  const initializeAuth = () => {
+    const storedToken = apiService.getAuthToken()
+    if (storedToken) {
+      token.value = storedToken
+      // In a real app, you'd validate the token and fetch user data
+      // For now, we'll just set a mock user
+      user.value = {
+        id: 1,
+        email: 'admin@example.com',
+        token: storedToken,
+      }
+    }
+  }
+
+  const clearError = () => {
+    error.value = null
+  }
+
+  return {
+    // State
+    user,
+    token,
+    isLoading,
+    error,
+
+    // Getters
+    isAuthenticated,
+    userEmail,
+
+    // Actions
+    login,
+    logout,
+    initializeAuth,
+    clearError,
+  }
+})
