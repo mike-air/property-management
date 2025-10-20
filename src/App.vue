@@ -2,7 +2,7 @@
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from './stores/auth'
-import { Toaster } from './components/ui/sonner'
+import { Toaster } from 'vue-toaster'
 import { User, LogOut } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -67,7 +67,7 @@ const handleLogout = async () => {
     </main>
 
     <!-- Toast Notifications -->
-    <Toaster />
+    <Toaster position="top" />
   </div>
 </template>
 
