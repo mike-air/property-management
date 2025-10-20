@@ -10,8 +10,11 @@ A Vue 3 + TypeScript property management application with authentication, CRUD o
 - 📊 **Sorting**: Sort properties by various fields
 - 📄 **Pagination**: Navigate through property listings
 - 🎨 **Modern UI**: Built with shadcn/ui components and TailwindCSS
-- 🗺️ **Map Integration**: Property location display (placeholder for Leaflet)
+- 🗺️ **Map Integration**: Property location display with Leaflet
 - 📱 **Responsive**: Mobile-friendly design
+- ⚡ **Real-time Updates**: Live property updates via Server-Sent Events (SSE)
+- 🖼️ **Image Management**: Upload and display property images
+- 🔔 **Toast Notifications**: User feedback for all actions
 
 ## Tech Stack
 
@@ -47,7 +50,15 @@ A Vue 3 + TypeScript property management application with authentication, CRUD o
 
    This starts JSON Server on http://localhost:3001
 
-3. **Start the development server** (in another terminal):
+3. **Start the SSE server** (in another terminal):
+
+   ```bash
+   npm run sse-server
+   ```
+
+   This starts the Server-Sent Events server on http://localhost:3002
+
+4. **Start the development server** (in a third terminal):
 
    ```bash
    npm run dev
@@ -55,7 +66,13 @@ A Vue 3 + TypeScript property management application with authentication, CRUD o
 
    This starts the Vue app on http://localhost:5173
 
-4. **Open your browser** and navigate to http://localhost:5173
+5. **Open your browser** and navigate to http://localhost:5173
+
+**Alternative: Start all servers at once:**
+
+```bash
+npm run dev:all
+```
 
 ### Demo Credentials
 
@@ -68,6 +85,8 @@ A Vue 3 + TypeScript property management application with authentication, CRUD o
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
 - `npm run mock-api` - Start JSON Server mock API
+- `npm run sse-server` - Start Server-Sent Events server
+- `npm run dev:all` - Start all servers (dev, mock-api, sse-server)
 - `npm run test:e2e` - Run Playwright E2E tests
 - `npm run lint` - Run ESLint
 - `npm run format` - Format code with Prettier
@@ -121,6 +140,14 @@ src/
 - **Add Property**: Create new property listings
 - **Delete Property**: Remove properties with confirmation
 
+### Real-time Updates
+
+- **Server-Sent Events (SSE)**: Live property updates without page refresh
+- **Automatic Updates**: Property changes appear instantly across all connected clients
+- **Toast Notifications**: Real-time notifications for property updates
+- **Connection Management**: Automatic reconnection with exponential backoff
+- **Manual Triggers**: API endpoint for testing real-time updates
+
 ### UI/UX
 
 - Modern, clean design with shadcn/ui components
@@ -128,17 +155,20 @@ src/
 - Loading states and error handling
 - Toast notifications for user feedback
 - Form validation with error messages
+- Empty states with helpful icons and actions
 
 ## Next Steps
 
-This is a foundation for a property management system. Potential enhancements:
+This is a comprehensive property management system with all core features implemented. Potential enhancements:
 
-1. **Maps Integration**: Add Leaflet maps for property locations
-2. **Real-time Updates**: WebSocket/SSE for live updates
-3. **File Uploads**: Property image management
-4. **Advanced Search**: More sophisticated filtering options
+1. ✅ **Maps Integration**: Leaflet maps for property locations
+2. ✅ **Real-time Updates**: Server-Sent Events for live updates
+3. ✅ **File Uploads**: Property image management
+4. ✅ **Advanced Search**: Sophisticated filtering options
 5. **Reports**: Property analytics and reporting
 6. **Multi-tenancy**: Support for multiple property managers
+7. **User Roles**: Admin, manager, viewer permissions
+8. **PWA Features**: Offline capability and app-like experience
 
 ## Development Notes
 

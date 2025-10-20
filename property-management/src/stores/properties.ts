@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { apiService, type Property, type CreatePropertyRequest } from '../services/api'
 import { useToastStore } from './toast'
+import { sseService, type PropertyUpdateEvent } from '../services/sse'
 
 interface AdvancedFilters {
   search?: string
@@ -354,6 +355,49 @@ export const usePropertiesStore = defineStore('properties', () => {
     currentProperty.value = null
   }
 
+  // Realtime updates
+  const initializeRealtimeUpdates = () => {
+    sseService.addEventListener(handleRealtimeUpdate)
+    sseService.connect()
+  }
+
+  const stopRealtimeUpdates = () => {
+    sseService.removeEventListener(handleRealtimeUpdate)
+    sseService.disconnect()
+  }
+
+  const handleRealtimeUpdate = (event: PropertyUpdateEvent) => {
+    switch (event.type) {
+      case 'property_created':
+        // Add new property to the list
+        properties.value.unshift(event.property as Property)
+        break
+      
+      case 'property_updated':
+        // Update existing property
+        const updateIndex = properties.value.findIndex(p => p.id === event.property.id)
+        if (updateIndex !== -1) {
+          properties.value[updateIndex] = event.property as Property
+        }
+        
+        // Update current property if it's the same
+        if (currentProperty.value?.id === event.property.id) {
+          currentProperty.value = event.property as Property
+        }
+        break
+      
+      case 'property_deleted':
+        // Remove property from list
+        properties.value = properties.value.filter(p => p.id !== event.property.id)
+        
+        // Clear current property if it's the same
+        if (currentProperty.value?.id === event.property.id) {
+          currentProperty.value = null
+        }
+        break
+    }
+  }
+
   return {
     // State
     properties,
@@ -393,5 +437,9 @@ export const usePropertiesStore = defineStore('properties', () => {
     clearFilters,
     clearError,
     clearCurrentProperty,
+    
+    // Realtime updates
+    initializeRealtimeUpdates,
+    stopRealtimeUpdates,
   }
 })
