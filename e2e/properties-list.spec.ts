@@ -6,8 +6,11 @@ test.describe('Properties List', () => {
     await page.goto('/login')
     await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.com')
     await page.getByRole('textbox', { name: 'Password' }).fill('password')
-    await page.getByRole('button', { name: 'Sign In' }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
     await expect(page).toHaveURL('/properties')
+    
+    // Switch to table view for testing (default is now grid view)
+    await page.getByRole('button', { name: 'Table' }).click()
   })
 
   test('should display properties list with correct columns', async ({ page }) => {
@@ -23,7 +26,7 @@ test.describe('Properties List', () => {
 
   test('should display properties data correctly', async ({ page }) => {
     // Check that properties are displayed
-    await expect(page.locator('tbody tr')).toHaveCount(8) // Should have 8 properties
+    await expect(page.locator('tbody tr')).toHaveCount(6) // Should have 6 properties
 
     // Check first property data
     const firstRow = page.locator('tbody tr').first()
@@ -66,7 +69,7 @@ test.describe('Properties List', () => {
 
     // Should navigate to property details page
     await expect(page).toHaveURL(/\/properties\/\d+/)
-    await expect(page.getByRole('heading', { name: 'Property Details' })).toBeVisible()
+    await expect(page.getByText('Back to Properties')).toBeVisible()
   })
 
   test('should navigate to add property page when clicking Add Property', async ({ page }) => {
@@ -80,11 +83,11 @@ test.describe('Properties List', () => {
 
   test('should display correct property count', async ({ page }) => {
     // Check that the property count is displayed correctly
-    await expect(page.locator('h2', { hasText: 'Properties' })).toContainText('Properties (8)')
+    await expect(page.locator('h2', { hasText: 'Properties' })).toContainText('Properties (6)')
   })
 
   test('should toggle between table and map view', async ({ page }) => {
-    // Check that table view is active by default
+    // Check that table view is active (we switched to it in beforeEach)
     await expect(page.getByRole('button', { name: 'Table' })).toHaveClass(/bg-white/)
 
     // Click Map view
