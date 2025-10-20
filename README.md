@@ -4,17 +4,17 @@ A Vue 3 + TypeScript property management application with authentication, CRUD o
 
 ## Features
 
-- 🔐 **Authentication**: Login/logout with JWT tokens
-- 🏠 **Property Management**: Create, read, update, delete properties
-- 🔍 **Search & Filter**: Search properties by name, owner, type, and status
-- 📊 **Sorting**: Sort properties by various fields
-- 📄 **Pagination**: Navigate through property listings
-- 🎨 **Modern UI**: Built with shadcn/ui components and TailwindCSS
-- 🗺️ **Map Integration**: Property location display with Leaflet
-- 📱 **Responsive**: Mobile-friendly design
-- ⚡ **Real-time Updates**: Live property updates via Server-Sent Events (SSE)
-- 🖼️ **Image Management**: Upload and display property images
-- 🔔 **Toast Notifications**: User feedback for all actions
+- **Authentication**: Login/logout with JWT tokens
+- **Property Management**: Create, read, update, delete properties
+- **Search & Filter**: Search properties by name, owner, type, and status
+- **Sorting**: Sort properties by various fields
+- **Pagination**: Navigate through property listings
+- **Modern UI**: Built with shadcn/ui components and TailwindCSS
+- **Map Integration**: Property location display with Leaflet
+- **Responsive**: Mobile-friendly design
+- **Real-time Updates**: Live property updates via Server-Sent Events (SSE)
+- **Image Management**: Upload and display property images
+- **Toast Notifications**: User feedback for all actions
 
 ## Tech Stack
 
