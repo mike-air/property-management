@@ -29,9 +29,10 @@ const handleLogin = async () => {
     
     toastStore.success('Login successful!')
     router.push('/properties')
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Login failed. Please check your credentials.'
     toastStore.error('Login failed. Please check your credentials.')
-  } finally {
+    toastStore.error(errorMessage)
     isLoading.value = false
   }
 }
@@ -44,14 +45,21 @@ const handleKeyPress = (event: KeyboardEvent) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
+    <!-- Background Image with Overlay -->
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed" 
+         style="background-image: url('/bg.jpg');">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-black/90"></div>
+    
+    <!-- Login Content -->
+    <div class="relative z-10 max-w-md w-full space-y-8">
       <div class="text-center">
-        <h1 class="text-3xl font-bold text-gray-900">Property Management</h1>
-        <p class="mt-2 text-sm text-gray-600">Sign in to your account</p>
+        <h1 class="text-4xl font-bold text-white">Property Management</h1>
+        <p class="mt-2 text-lg text-gray-200">Sign in to your account</p>
       </div>
 
-      <div class="bg-white py-8 px-6 shadow-lg rounded-lg">
+      <div class="bg-white/95 backdrop-blur-sm py-8 px-6 shadow-2xl rounded-lg border border-white/20">
         <h2 class="text-2xl font-semibold text-gray-900 mb-2">Login</h2>
         <p class="text-sm text-gray-600 mb-6">
           Enter your email and password to access the property management system

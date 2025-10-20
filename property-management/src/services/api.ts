@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios'
+import { useToastStore } from '../stores/toast'
 
 // API Base URL
 const API_BASE_URL = 'http://localhost:3001'
@@ -9,6 +10,13 @@ export interface User {
   email: string
   password: string
   token: string
+}
+
+export interface PropertyImage {
+  id: string
+  url: string
+  alt: string
+  isPrimary: boolean
 }
 
 export interface Property {
@@ -25,6 +33,7 @@ export interface Property {
   bathrooms?: number
   squareFeet?: number
   address?: string
+  images?: PropertyImage[]
   createdAt: string
   updatedAt: string
 }
@@ -96,11 +105,24 @@ class ApiService {
     this.api.interceptors.response.use(
       (response) => response,
       (error) => {
+        const toastStore = useToastStore()
+
         if (error.response?.status === 401) {
           // Clear token and redirect to login
           localStorage.removeItem('auth_token')
+          toastStore.error('Session expired. Please log in again.')
           window.location.href = '/login'
+        } else if (error.response?.status >= 500) {
+          toastStore.error('Server error. Please try again later.')
+        } else if (error.response?.status >= 400) {
+          const message = error.response?.data?.message || error.message || 'Request failed'
+          toastStore.error(`Request failed: ${message}`)
+        } else if (error.code === 'NETWORK_ERROR' || error.message === 'Network Error') {
+          toastStore.error('Network error. Please check your connection.')
+        } else if (error.code === 'ECONNABORTED') {
+          toastStore.error('Request timeout. Please try again.')
         }
+
         return Promise.reject(error)
       },
     )

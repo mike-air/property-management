@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { apiService, type LoginRequest, type User } from '../services/api'
+import { useToastStore } from './toast'
 
 // Type for authenticated user (without password)
 type AuthenticatedUser = Omit<User, 'password'>
@@ -20,6 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
   const login = async (credentials: LoginRequest) => {
     isLoading.value = true
     error.value = null
+    const toastStore = useToastStore()
 
     try {
       const response = await apiService.login(credentials)
@@ -31,10 +33,12 @@ export const useAuthStore = defineStore('auth', () => {
       // Persist token to localStorage
       apiService.setAuthToken(response.token)
 
+      toastStore.success(`Welcome back, ${response.user.email}!`)
       return response
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed'
       error.value = errorMessage
+      toastStore.error(`Login failed: ${errorMessage}`)
       throw err
     } finally {
       isLoading.value = false
@@ -42,8 +46,12 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
+    const toastStore = useToastStore()
+    const userEmail = user.value?.email || 'User'
+
     try {
       await apiService.logout()
+      toastStore.info(`Goodbye, ${userEmail}! You have been logged out.`)
     } finally {
       // Clear local state
       user.value = null
