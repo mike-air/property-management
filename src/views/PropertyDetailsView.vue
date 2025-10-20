@@ -3,7 +3,7 @@ import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePropertiesStore } from '../stores/properties'
 import { useToastStore } from '../stores/toast'
-import { ArrowLeft, MapPin, FileText, AlertCircle, Loader2, Bed, Bath, Square, Calendar, DollarSign, Home, User } from 'lucide-vue-next'
+import { ArrowLeft, MapPin, FileText, AlertCircle, Loader2, Bed, Bath, Square, Calendar, DollarSign, Home, User, X, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import VueLeafletMapComponent from '../components/VueLeafletMapComponent.vue'
 
 const route = useRoute()
@@ -12,8 +12,12 @@ const propertiesStore = usePropertiesStore()
 const toastStore = useToastStore()
 
 const isLoading = ref(false)
+const showLightbox = ref(false)
+const selectedImageIndex = ref(0)
 
 const property = computed(() => propertiesStore.currentProperty)
+const propertyImages = computed(() => property.value?.images || [])
+const selectedImage = computed(() => propertyImages.value[selectedImageIndex.value])
 
 onMounted(async () => {
   const propertyId = Number(route.params.id)
@@ -49,17 +53,30 @@ const formatPrice = (price: number, type: string) => {
   return `$${price.toLocaleString()}`
 }
 
-const requestTour = () => {
-  toastStore.success('Tour request sent! We\'ll contact you soon.')
-}
-
-const contactAgent = () => {
-  toastStore.info('Contacting property agent...')
-}
-
 const editProperty = () => {
   if (property.value) {
     router.push(`/properties/${property.value.id}/edit`)
+  }
+}
+
+const openLightbox = (index: number) => {
+  selectedImageIndex.value = index
+  showLightbox.value = true
+}
+
+const closeLightbox = () => {
+  showLightbox.value = false
+}
+
+const nextImage = () => {
+  if (selectedImageIndex.value < propertyImages.value.length - 1) {
+    selectedImageIndex.value++
+  }
+}
+
+const prevImage = () => {
+  if (selectedImageIndex.value > 0) {
+    selectedImageIndex.value--
   }
 }
 
@@ -125,9 +142,10 @@ const editProperty = () => {
         <div class="lg:col-span-1">
           <div class="grid grid-cols-2 gap-3 h-full">
             <div
-              v-for="image in (property.images || []).slice(0, 4)"
+              v-for="(image, index) in propertyImages.slice(0, 4)"
               :key="image.id"
               class="aspect-square bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+              @click="openLightbox(index)"
             >
               <img
                 :src="image.url"
@@ -136,11 +154,12 @@ const editProperty = () => {
               />
             </div>
             <div
-              v-if="(property.images || []).length > 4"
+              v-if="propertyImages.length > 4"
               class="aspect-square bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
+              @click="openLightbox(4)"
             >
               <span class="text-sm font-medium text-gray-600">
-                +{{ (property.images || []).length - 4 }} more
+                +{{ propertyImages.length - 4 }} more
               </span>
             </div>
           </div>
@@ -282,24 +301,6 @@ const editProperty = () => {
               </div>
             </div>
 
-            <!-- Call to Action Buttons -->
-            <div class="bg-white rounded-xl border border-gray-200 p-6">
-              <button
-                @click="requestTour"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-3"
-              >
-                Request a tour
-              </button>
-              <p class="text-xs text-gray-500 text-center mb-4">as early as tomorrow at 9:00 am</p>
-              
-              <button
-                @click="contactAgent"
-                class="w-full border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-6 rounded-lg transition-colors"
-              >
-                Contact agent
-              </button>
-            </div>
-
             <!-- Edit Controls (Admin) -->
             <div class="bg-white rounded-xl border border-gray-200 p-6">
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Property Management</h3>
@@ -334,6 +335,56 @@ const editProperty = () => {
             Back to Properties
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div
+    v-if="showLightbox"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
+    @click="closeLightbox"
+  >
+    <div class="relative max-w-4xl max-h-[90vh] w-full mx-4">
+      <!-- Close Button -->
+      <button
+        @click="closeLightbox"
+        class="absolute top-4 right-4 z-10 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-colors"
+      >
+        <X class="h-6 w-6" />
+      </button>
+
+      <!-- Navigation Buttons -->
+      <button
+        v-if="selectedImageIndex > 0"
+        @click.stop="prevImage"
+        class="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-colors"
+      >
+        <ChevronLeft class="h-6 w-6" />
+      </button>
+
+      <button
+        v-if="selectedImageIndex < propertyImages.length - 1"
+        @click.stop="nextImage"
+        class="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-colors"
+      >
+        <ChevronRight class="h-6 w-6" />
+      </button>
+
+      <!-- Main Image -->
+      <div class="flex items-center justify-center h-full">
+        <img
+          v-if="selectedImage"
+          :src="selectedImage.url"
+          :alt="selectedImage.alt"
+          class="max-w-full max-h-full object-contain rounded-lg"
+          @click.stop
+        />
+      </div>
+
+      <!-- Image Counter -->
+      <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+        {{ selectedImageIndex + 1 }} / {{ propertyImages.length }}
       </div>
     </div>
   </div>
