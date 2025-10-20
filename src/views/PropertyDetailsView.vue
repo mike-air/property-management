@@ -3,10 +3,8 @@ import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePropertiesStore } from '../stores/properties'
 import { useToastStore } from '../stores/toast'
-import { ArrowLeft, Save, MapPin, FileText, AlertCircle, Loader2, Bed, Bath, Square, Calendar, DollarSign, Home, User, Phone, Calendar as CalendarIcon } from 'lucide-vue-next'
+import { ArrowLeft, Save, MapPin, FileText, AlertCircle, Loader2, Bed, Bath, Square, Calendar, DollarSign, Home, User } from 'lucide-vue-next'
 import VueLeafletMapComponent from '../components/VueLeafletMapComponent.vue'
-import ImageGallery from '../components/ImageGallery.vue'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
 
 const route = useRoute()
 const router = useRouter()
@@ -123,13 +121,7 @@ const formatPrice = (price: number, type: string) => {
   return `$${price.toLocaleString()}`
 }
 
-const requestTour = () => {
-  toastStore.success('Tour request sent! We\'ll contact you soon.')
-}
 
-const contactAgent = () => {
-  toastStore.info('Contacting property agent...')
-}
 
 </script>
 
@@ -191,7 +183,7 @@ const contactAgent = () => {
         <div class="lg:col-span-1">
           <div class="grid grid-cols-2 gap-3 h-full">
             <div
-              v-for="(image, index) in (property.images || []).slice(0, 4)"
+              v-for="image in (property.images || []).slice(0, 4)"
               :key="image.id"
               class="aspect-square bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
             >
@@ -325,31 +317,31 @@ const contactAgent = () => {
               <span>No description provided</span>
             </div>
           </div>
-
-          <!-- Map Section -->
-          <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                <MapPin class="h-5 w-5 mr-2" />
-                Location
-              </h3>
-              <p class="text-sm text-gray-600">Property location on map</p>
-            </div>
-            <div class="p-6">
-              <VueLeafletMapComponent
-                :single-property="property"
-                height="400px"
-                :zoom="15"
-              />
-            </div>
-          </div>
         </div>
 
-        <!-- Right Column: Actions & Contact -->
+        <!-- Right Column: Map & Actions -->
         <div class="lg:col-span-1">
-          <div class="sticky top-8">
+          <div class="sticky top-8 space-y-6">
+            <!-- Map Section -->
+            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                  <MapPin class="h-5 w-5 mr-2" />
+                  Location
+                </h3>
+                <p class="text-sm text-gray-600">Property location on map</p>
+              </div>
+              <div class="p-6">
+                <VueLeafletMapComponent
+                  :single-property="property"
+                  height="300px"
+                  :zoom="15"
+                />
+              </div>
+            </div>
+
             <!-- Call to Action Buttons -->
-            <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
               <button
                 @click="requestTour"
                 class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors mb-3"
@@ -399,7 +391,6 @@ const contactAgent = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
 
     <div v-else class="text-center py-24">
