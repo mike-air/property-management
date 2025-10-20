@@ -14,6 +14,7 @@ const toastStore = useToastStore()
 const isLoading = ref(false)
 const showLightbox = ref(false)
 const selectedImageIndex = ref(0)
+const showMapLightbox = ref(false)
 
 const property = computed(() => propertiesStore.currentProperty)
 const propertyImages = computed(() => property.value?.images || [])
@@ -78,6 +79,14 @@ const prevImage = () => {
   if (selectedImageIndex.value > 0) {
     selectedImageIndex.value--
   }
+}
+
+const openMapLightbox = () => {
+  showMapLightbox.value = true
+}
+
+const closeMapLightbox = () => {
+  showMapLightbox.value = false
 }
 
 
@@ -292,12 +301,17 @@ const prevImage = () => {
                 </h3>
                 <p class="text-sm text-gray-600">Property location on map</p>
               </div>
-              <div class="p-6">
+              <div class="p-6 cursor-pointer hover:opacity-90 transition-opacity relative" @click="openMapLightbox">
                 <VueLeafletMapComponent
                   :single-property="property"
                   height="300px"
                   :zoom="15"
                 />
+                <div class="absolute inset-6 flex items-center justify-center pointer-events-none">
+                  <div class="bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    Click to view larger map
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -385,6 +399,38 @@ const prevImage = () => {
       <!-- Image Counter -->
       <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
         {{ selectedImageIndex + 1 }} / {{ propertyImages.length }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Map Lightbox Modal -->
+  <div
+    v-if="showMapLightbox"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
+    @click="closeMapLightbox"
+  >
+    <div class="relative max-w-6xl max-h-[90vh] w-full mx-4">
+      <!-- Close Button -->
+      <button
+        @click="closeMapLightbox"
+        class="absolute top-4 right-4 z-10 p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-colors"
+      >
+        <X class="h-6 w-6" />
+      </button>
+
+      <!-- Map Title -->
+      <div class="absolute top-4 left-4 z-10 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm font-medium">
+        Property Location
+      </div>
+
+      <!-- Large Map -->
+      <div class="bg-white rounded-lg overflow-hidden h-[80vh]">
+        <VueLeafletMapComponent
+          v-if="property"
+          :single-property="property"
+          height="100%"
+          :zoom="16"
+        />
       </div>
     </div>
   </div>
