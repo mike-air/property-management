@@ -43,13 +43,6 @@
             </div>
           </div>
         </l-popup>
-        
-        <!-- Custom marker icon based on property type -->
-        <l-icon
-          :icon-url="getMarkerIcon(property.type, property.status)"
-          :icon-size="[25, 41]"
-          :icon-anchor="[12, 41]"
-        />
       </l-marker>
       
       <!-- Single property marker (for property details view) -->
@@ -66,12 +59,6 @@
             </p>
           </div>
         </l-popup>
-        
-        <l-icon
-          :icon-url="getMarkerIcon(singleProperty.type, singleProperty.status)"
-          :icon-size="[25, 41]"
-          :icon-anchor="[12, 41]"
-        />
       </l-marker>
     </l-map>
   </div>
@@ -79,11 +66,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { LMap, LTileLayer, LMarker, LPopup, LIcon } from '@vue-leaflet/vue-leaflet'
+import { LMap, LTileLayer, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
 import type { Property } from '../services/api'
-
-// Import Leaflet CSS
-import 'leaflet/dist/leaflet.css'
 
 // Props
 interface Props {
@@ -171,15 +155,6 @@ const formatPrice = (price: number, type: string) => {
     return `$${price.toLocaleString()}/month`
   }
   return `$${price.toLocaleString()}`
-}
-
-const getMarkerIcon = (type: string, status: string) => {
-  // Create different colored markers based on property type and status
-  const color = type === 'rental' ? 'blue' : 'green'
-  const statusColor = status === 'available' ? color : 'red'
-  
-  // Return a colored marker icon URL
-  return `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${statusColor}.png`
 }
 
 // Watch for changes in properties to update map bounds
