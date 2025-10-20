@@ -360,6 +360,22 @@
       "squareFeet": 44,
       "address": "Velit nobis neque qu",
       "images": []
+    },
+    {
+      "id": "1949",
+      "name": "Quasi consequuntur a",
+      "type": "rental",
+      "owner": "Perspiciatis ut exc",
+      "price": 100,
+      "status": "available",
+      "latitude": 41,
+      "longitude": 77,
+      "description": "Necessitatibus commo",
+      "bedrooms": 24,
+      "bathrooms": 81,
+      "squareFeet": 60,
+      "address": "Pariatur Pariatur ",
+      "images": []
     }
   ]
 }

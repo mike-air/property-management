@@ -139,7 +139,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 <template>
   <div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="mb-8">
         <button 
@@ -360,7 +360,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
             </div>
 
             <!-- Form Actions -->
-            <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+            <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200 justify-end">
               <button
                 type="button"
                 @click="resetForm"
