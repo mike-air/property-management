@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useToastStore } from '../stores/toast'
-import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-vue-next'
+import { ArrowRight, Eye, EyeOff } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -124,7 +124,7 @@ const togglePasswordVisibility = () => {
           </button>
         </form>
 
-       
+        
 
         <!-- Terms -->
         <div class="mt-8 text-center">
@@ -147,7 +147,7 @@ const togglePasswordVisibility = () => {
     <div class="hidden lg:block lg:flex-1 relative">
       <div class="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        src="/bg.jpg"
           alt="Happy family in their home"
           class="w-full h-full object-cover"
         />

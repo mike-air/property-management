@@ -15,19 +15,18 @@
   ],
   "properties": [
     {
-      "id": "1",
-      "name": "Modern Downtown Loft",
+      "name": "Breanna Dickson",
       "type": "rental",
-      "owner": "Sarah Johnson",
-      "price": 3200,
+      "owner": "Velit non voluptatu",
+      "price": 994,
       "status": "available",
-      "latitude": 37.7879,
-      "longitude": -122.4075,
-      "description": "Stylish loft in the heart of downtown with exposed brick walls and high ceilings. Features modern appliances and a private balcony with city views.",
-      "bedrooms": 1,
-      "bathrooms": 1,
-      "squareFeet": 850,
-      "address": "123 Market Street, San Francisco, CA 94102",
+      "latitude": 74,
+      "longitude": 54,
+      "description": "Quo dolore non imped",
+      "bedrooms": 80,
+      "bathrooms": 25,
+      "squareFeet": 81,
+      "address": "Magnam perspiciatis",
       "images": [
         {
           "id": "img_1",
@@ -42,8 +41,7 @@
           "isPrimary": false
         }
       ],
-      "createdAt": "2024-01-15T10:30:00Z",
-      "updatedAt": "2024-01-15T10:30:00Z"
+      "id": "1"
     },
     {
       "id": "2",
@@ -77,19 +75,18 @@
       "updatedAt": "2024-01-20T14:15:00Z"
     },
     {
-      "id": "3",
-      "name": "Cozy Mission District Studio",
+      "name": "Austin Hogan",
       "type": "rental",
-      "owner": "Elena Rodriguez",
-      "price": 2200,
+      "owner": "Praesentium officia ",
+      "price": 794,
       "status": "occupied",
-      "latitude": 37.7599,
-      "longitude": -122.4148,
-      "description": "Charming studio in the vibrant Mission District. Walking distance to restaurants, cafes, and public transportation. Perfect for young professionals.",
-      "bedrooms": 0,
-      "bathrooms": 1,
-      "squareFeet": 500,
-      "address": "789 Valencia Street, San Francisco, CA 94110",
+      "latitude": 31,
+      "longitude": 97,
+      "description": "Tempor culpa labori",
+      "bedrooms": 59,
+      "bathrooms": 52,
+      "squareFeet": 12,
+      "address": "Irure excepteur qui ",
       "images": [
         {
           "id": "img_5",
@@ -98,8 +95,7 @@
           "isPrimary": true
         }
       ],
-      "createdAt": "2024-01-25T09:45:00Z",
-      "updatedAt": "2024-01-25T09:45:00Z"
+      "id": "3"
     },
     {
       "id": "4",
@@ -139,7 +135,6 @@
       "updatedAt": "2024-01-30T16:20:00Z"
     },
     {
-      "id": "5",
       "name": "SOMA Tech Hub Apartment",
       "type": "rental",
       "owner": "Jennifer Park",
@@ -152,22 +147,30 @@
       "bathrooms": 1,
       "squareFeet": 950,
       "address": "555 Folsom Street, San Francisco, CA 94107",
+      "id": "5"
+    },
+    {
+      "id": "9e41",
+      "name": "Neque dolor expedita",
+      "type": "rental",
+      "owner": "Nulla incidunt maio",
+      "price": 41,
+      "status": "available",
+      "latitude": 55,
+      "longitude": 48,
+      "description": "Totam cumque distinc",
+      "bedrooms": 5,
+      "bathrooms": 83,
+      "squareFeet": 13,
+      "address": "Voluptas et maiores ",
       "images": [
         {
-          "id": "img_9",
-          "url": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
-          "alt": "Modern SOMA apartment",
+          "id": "img_1761002476902_6i1s6xdqw",
+          "url": "blob:http://localhost:5173/0bb68d13-d6a8-4037-8646-680e59cab9b5",
+          "alt": "africa-humanitarian-aid-doctor-taking-care-patient",
           "isPrimary": true
-        },
-        {
-          "id": "img_10",
-          "url": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop",
-          "alt": "Smart home technology setup",
-          "isPrimary": false
         }
-      ],
-      "createdAt": "2024-02-01T11:10:00Z",
-      "updatedAt": "2024-02-01T11:10:00Z"
+      ]
     }
   ]
 }

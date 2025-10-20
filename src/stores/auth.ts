@@ -64,8 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
     const storedToken = apiService.getAuthToken()
     if (storedToken) {
       token.value = storedToken
-      // In a real app, you'd validate the token and fetch user data
-      // For now, we'll just set a mock user
+
       user.value = {
         id: 1,
         email: 'admin@example.com',

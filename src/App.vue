@@ -57,7 +57,7 @@ const handleLogout = async () => {
             </div>
             <button 
               @click="handleLogout" 
-              class="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+              class="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors"
             >
               <LogOut class="h-4 w-4" />
               <span>Logout</span>

@@ -249,13 +249,7 @@
             <span>Apply Filters</span>
           </button>
           
-          <button
-            @click="saveSearch"
-            class="flex items-center justify-center space-x-2 px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-          >
-            <Bookmark class="h-4 w-4" />
-            <span>Save Search</span>
-          </button>
+          
 
           <div class="text-sm text-gray-600 flex items-center">
             <span v-if="activeFiltersCount > 0">
@@ -270,7 +264,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { Search, DollarSign, Home, Bookmark } from 'lucide-vue-next'
+import { Search, DollarSign, Home } from 'lucide-vue-next'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Button } from './ui/button'
 import { Label } from './ui/label'
@@ -362,10 +356,6 @@ const handleFilterChange = () => {
 
 const handleSearch = () => {
   emit('search', filters.value)
-}
-
-const saveSearch = () => {
-  emit('save-search', filters.value)
 }
 
 const clearAllFilters = () => {
