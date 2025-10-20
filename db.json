@@ -376,6 +376,22 @@
       "squareFeet": 60,
       "address": "Pariatur Pariatur ",
       "images": []
+    },
+    {
+      "id": "78c9",
+      "name": "Temporibus dolore vo",
+      "type": "rental",
+      "owner": "Eaque ut excepturi a",
+      "price": 21,
+      "status": "available",
+      "latitude": 49,
+      "longitude": 96,
+      "description": "Maxime harum et aut ",
+      "bedrooms": 94,
+      "bathrooms": 81,
+      "squareFeet": 11,
+      "address": "Ut aut ex expedita q",
+      "images": []
     }
   ]
 }

@@ -3,7 +3,7 @@ import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePropertiesStore } from '../stores/properties'
 import { useToastStore } from '../stores/toast'
-import { Plus, Eye, Edit, Trash2, ArrowLeft, ArrowRight, Map, List, Home, Image, Loader2 } from 'lucide-vue-next'
+import { Plus, Eye, Edit, Trash2, ArrowLeft, ArrowRight, Map, List, Grid3X3, Home, Image, Loader2 } from 'lucide-vue-next'
 import VueLeafletMapComponent from '../components/VueLeafletMapComponent.vue'
 import AdvancedSearch, { type SearchFilters } from '../components/AdvancedSearch.vue'
 import ConfirmationDialog from '../components/ConfirmationDialog.vue'
@@ -18,7 +18,7 @@ const typeFilter = ref('all')
 const statusFilter = ref('all')
 const sortBy = ref('name')
 const sortOrder = ref<'asc' | 'desc'>('asc')
-const viewMode = ref<'table' | 'map'>('table')
+const viewMode = ref<'table' | 'grid' | 'map'>('table')
 const searchFilters = ref({})
 
 // Confirmation dialog state
@@ -194,6 +194,18 @@ const handleSaveSearch = (filters: SearchFilters) => {
                   <span>Table</span>
                 </button>
                 <button
+                  @click="viewMode = 'grid'"
+                  :class="[
+                    'flex items-center space-x-2 px-3 py-1 rounded-md text-sm font-medium transition-colors',
+                    viewMode === 'grid'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  ]"
+                >
+                  <Grid3X3 class="h-4 w-4" />
+                  <span>Grid</span>
+                </button>
+                <button
                   @click="viewMode = 'map'"
                   :class="[
                     'flex items-center space-x-2 px-3 py-1 rounded-md text-sm font-medium transition-colors',
@@ -367,6 +379,97 @@ const handleSaveSearch = (filters: SearchFilters) => {
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Grid View -->
+          <div v-else-if="viewMode === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div 
+              v-for="property in properties" 
+              :key="property.id"
+              class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+              @click="viewProperty(property.id)"
+            >
+              <!-- Property Image -->
+              <div class="aspect-w-16 aspect-h-12 bg-gray-100">
+                <div class="w-full h-48 bg-gray-100 relative">
+                  <img
+                    v-if="property.images && property.images.length > 0"
+                    :src="property.images.find(img => img.isPrimary)?.url || property.images[0]?.url || ''"
+                    :alt="property.name"
+                    class="w-full h-full object-cover"
+                  />
+                  <div v-else class="w-full h-full flex flex-col items-center justify-center text-gray-400">
+                    <Image class="w-8 h-8 mb-2" />
+                    <span class="text-sm">No Image</span>
+                  </div>
+                  
+                  <!-- Status Badge -->
+                  <div class="absolute top-3 right-3">
+                    <span 
+                      class="status-badge text-xs px-2 py-1"
+                      :class="property.status === 'available' ? 'status-available' : 'status-occupied'"
+                    >
+                      {{ property.status }}
+                    </span>
+                  </div>
+                  
+                  <!-- Type Badge -->
+                  <div class="absolute top-3 left-3">
+                    <span 
+                      class="status-badge text-xs px-2 py-1"
+                      :class="property.type === 'rental' ? 'status-rental' : 'status-sale'"
+                    >
+                      {{ property.type }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Property Details -->
+              <div class="p-4">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">{{ property.name }}</h3>
+                <p class="text-sm text-gray-600 mb-2">{{ property.owner }}</p>
+                <p class="text-lg font-bold text-blue-600 mb-3">{{ formatPrice(property.price, property.type) }}</p>
+                
+                <!-- Property Info -->
+                <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                  <div v-if="property.bedrooms" class="flex items-center">
+                    <span>{{ property.bedrooms }} bed{{ property.bedrooms > 1 ? 's' : '' }}</span>
+                  </div>
+                  <div v-if="property.bathrooms" class="flex items-center">
+                    <span>{{ property.bathrooms }} bath{{ property.bathrooms > 1 ? 's' : '' }}</span>
+                  </div>
+                  <div v-if="property.squareFeet" class="flex items-center">
+                    <span>{{ property.squareFeet.toLocaleString() }} sq ft</span>
+                  </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex space-x-2">
+                  <button
+                    @click.stop="viewProperty(property.id)"
+                    class="flex-1 flex items-center justify-center space-x-1 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 hover:bg-blue-200 rounded-md transition-colors"
+                  >
+                    <Eye class="h-4 w-4" />
+                    <span>View</span>
+                  </button>
+                  <button
+                    @click.stop="editProperty(property.id)"
+                    class="flex-1 flex items-center justify-center space-x-1 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                  >
+                    <Edit class="h-4 w-4" />
+                    <span>Edit</span>
+                  </button>
+                  <button
+                    @click.stop="deleteProperty(property.id)"
+                    class="flex-1 flex items-center justify-center space-x-1 px-3 py-2 text-sm font-medium text-red-700 bg-red-100 hover:bg-red-200 rounded-md transition-colors"
+                  >
+                    <Trash2 class="h-4 w-4" />
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Map View -->
