@@ -28,7 +28,14 @@ const handleLogout = async () => {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center space-x-8">
-            <h1 class="text-xl font-semibold text-gray-900">Property Management</h1>
+            <!-- PropertyPro Logo -->
+            <router-link to="/properties" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span class="text-white font-bold text-lg">P</span>
+              </div>
+              <span class="text-xl font-bold text-gray-900">PropertyPro</span>
+            </router-link>
+            
             <div class="flex space-x-4">
               <router-link
                 to="/properties"
