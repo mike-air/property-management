@@ -1,6 +1,5 @@
-const express = require('express')
-const cors = require('cors')
-const path = require('path')
+import express from 'express'
+import cors from 'cors'
 
 const app = express()
 const PORT = 3002
@@ -102,14 +101,7 @@ app.post('/api/events/trigger', (req, res) => {
   res.json({ success: true, message: 'Event broadcasted' })
 })
 
-// Health check
-app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'healthy', 
-    connectedClients: clients.size,
-    uptime: process.uptime()
-  })
-})
+
 
 app.listen(PORT, () => {
   console.log(`SSE Server running on http://localhost:${PORT}`)

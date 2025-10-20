@@ -372,24 +372,24 @@ export const usePropertiesStore = defineStore('properties', () => {
         // Add new property to the list
         properties.value.unshift(event.property as Property)
         break
-      
+
       case 'property_updated':
         // Update existing property
-        const updateIndex = properties.value.findIndex(p => p.id === event.property.id)
+        const updateIndex = properties.value.findIndex((p) => p.id === event.property.id)
         if (updateIndex !== -1) {
           properties.value[updateIndex] = event.property as Property
         }
-        
+
         // Update current property if it's the same
         if (currentProperty.value?.id === event.property.id) {
           currentProperty.value = event.property as Property
         }
         break
-      
+
       case 'property_deleted':
         // Remove property from list
-        properties.value = properties.value.filter(p => p.id !== event.property.id)
-        
+        properties.value = properties.value.filter((p) => p.id !== event.property.id)
+
         // Clear current property if it's the same
         if (currentProperty.value?.id === event.property.id) {
           currentProperty.value = null
@@ -437,7 +437,7 @@ export const usePropertiesStore = defineStore('properties', () => {
     clearFilters,
     clearError,
     clearCurrentProperty,
-    
+
     // Realtime updates
     initializeRealtimeUpdates,
     stopRealtimeUpdates,

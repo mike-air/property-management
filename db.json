@@ -328,6 +328,38 @@
           "isPrimary": false
         }
       ]
+    },
+    {
+      "id": "7ddc",
+      "name": "Esse dolor nisi veli",
+      "type": "rental",
+      "owner": "Sint numquam occaeca",
+      "price": 97,
+      "status": "available",
+      "latitude": 37,
+      "longitude": 15,
+      "description": "Autem amet sunt lab",
+      "bedrooms": 19,
+      "bathrooms": 63,
+      "squareFeet": 35,
+      "address": "Sint sed nobis quos ",
+      "images": []
+    },
+    {
+      "id": "a19b",
+      "name": "Ut modi officia vel ",
+      "type": "rental",
+      "owner": "Aliquid consectetur",
+      "price": 72,
+      "status": "available",
+      "latitude": 22,
+      "longitude": 90,
+      "description": "Deserunt dolor amet",
+      "bedrooms": 94,
+      "bathrooms": 14,
+      "squareFeet": 44,
+      "address": "Velit nobis neque qu",
+      "images": []
     }
   ]
 }

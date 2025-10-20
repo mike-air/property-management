@@ -1,8 +1,8 @@
 import { useToastStore } from '../stores/toast'
 
 export interface PropertyUpdateEvent {
-  type: 'property_created' | 'property_updated' | 'property_deleted'
-  property: {
+  type: 'property_created' | 'property_updated' | 'property_deleted' | 'connection'
+  property?: {
     id: number
     name: string
     type: 'rental' | 'sale'
@@ -25,6 +25,7 @@ export interface PropertyUpdateEvent {
     createdAt: string
     updatedAt: string
   }
+  message?: string
 }
 
 export interface SSEConnection {
@@ -39,11 +40,10 @@ class SSEService {
     eventSource: null,
     isConnected: false,
     reconnectAttempts: 0,
-    maxReconnectAttempts: 5
+    maxReconnectAttempts: 5,
   }
 
   private listeners: Array<(event: PropertyUpdateEvent) => void> = []
-  private toastStore = useToastStore()
 
   // Connect to SSE endpoint
   connect(): void {
@@ -52,8 +52,8 @@ class SSEService {
     }
 
     try {
-      this.connection.eventSource = new EventSource('http://localhost:3001/api/events')
-      
+      this.connection.eventSource = new EventSource('http://localhost:3002/api/events')
+
       this.connection.eventSource.onopen = () => {
         console.log('SSE connection opened')
         this.connection.isConnected = true
@@ -74,7 +74,6 @@ class SSEService {
         this.connection.isConnected = false
         this.handleReconnect()
       }
-
     } catch (error) {
       console.error('Failed to create SSE connection:', error)
       this.handleReconnect()
@@ -107,9 +106,9 @@ class SSEService {
   // Handle property update events
   private handlePropertyUpdate(event: PropertyUpdateEvent): void {
     console.log('Received property update:', event)
-    
+
     // Notify all listeners
-    this.listeners.forEach(listener => {
+    this.listeners.forEach((listener) => {
       try {
         listener(event)
       } catch (error) {
@@ -123,18 +122,31 @@ class SSEService {
 
   // Show toast notification for updates
   private showUpdateNotification(event: PropertyUpdateEvent): void {
-    const propertyName = event.property.name
-    
-    switch (event.type) {
-      case 'property_created':
-        this.toastStore.success(`New property "${propertyName}" added in real-time`)
-        break
-      case 'property_updated':
-        this.toastStore.info(`Property "${propertyName}" updated in real-time`)
-        break
-      case 'property_deleted':
-        this.toastStore.warning(`Property "${propertyName}" was removed`)
-        break
+    // Skip connection messages
+    if (event.type === 'connection') {
+      return
+    }
+
+    const propertyName = event.property?.name || 'Unknown Property'
+
+    // Get toast store dynamically to avoid Pinia initialization issues
+    try {
+      const toastStore = useToastStore()
+
+      switch (event.type) {
+        case 'property_created':
+          toastStore.success(`New property "${propertyName}" added in real-time`)
+          break
+        case 'property_updated':
+          toastStore.info(`Property "${propertyName}" updated in real-time`)
+          break
+        case 'property_deleted':
+          toastStore.warning(`Property "${propertyName}" was removed`)
+          break
+      }
+    } catch (_error) {
+      // Fallback to console if Pinia isn't available
+      console.log(`Property update: ${event.type} - ${propertyName}`)
     }
   }
 
@@ -143,15 +155,23 @@ class SSEService {
     if (this.connection.reconnectAttempts < this.connection.maxReconnectAttempts) {
       this.connection.reconnectAttempts++
       const delay = Math.min(1000 * Math.pow(2, this.connection.reconnectAttempts), 30000)
-      
-      console.log(`Attempting to reconnect SSE in ${delay}ms (attempt ${this.connection.reconnectAttempts})`)
-      
+
+      console.log(
+        `Attempting to reconnect SSE in ${delay}ms (attempt ${this.connection.reconnectAttempts})`,
+      )
+
       setTimeout(() => {
         this.connect()
       }, delay)
     } else {
       console.error('Max SSE reconnection attempts reached')
-      this.toastStore.error('Lost connection to real-time updates')
+      // Try to show toast notification, fallback to console
+      try {
+        const toastStore = useToastStore()
+        toastStore.error('Lost connection to real-time updates')
+      } catch (_error) {
+        console.error('Lost connection to real-time updates')
+      }
     }
   }
 
@@ -161,7 +181,10 @@ class SSEService {
   }
 
   // Simulate property update (for testing)
-  simulatePropertyUpdate(type: PropertyUpdateEvent['type'], property: PropertyUpdateEvent['property']): void {
+  simulatePropertyUpdate(
+    type: PropertyUpdateEvent['type'],
+    property: PropertyUpdateEvent['property'],
+  ): void {
     const event: PropertyUpdateEvent = { type, property }
     this.handlePropertyUpdate(event)
   }
