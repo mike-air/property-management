@@ -168,6 +168,35 @@
       ],
       "createdAt": "2024-02-01T11:10:00Z",
       "updatedAt": "2024-02-01T11:10:00Z"
+    },
+    {
+      "id": "6f47",
+      "name": "Corrupti sunt possi",
+      "type": "rental",
+      "owner": "Quia voluptatem min",
+      "price": 75,
+      "status": "available",
+      "latitude": 80,
+      "longitude": 61,
+      "description": "Debitis harum eum qu",
+      "bedrooms": 49,
+      "bathrooms": 30,
+      "squareFeet": 27,
+      "address": "Et omnis ut minim el",
+      "images": [
+        {
+          "id": "img_1760998712592_pc4l2f3wu",
+          "url": "blob:http://localhost:5173/a67f74c4-bc91-413b-bb05-e02bf47f65a8",
+          "alt": "side-view-hands-gardening",
+          "isPrimary": true
+        },
+        {
+          "id": "img_1760998715873_7u2dcrzd3",
+          "url": "blob:http://localhost:5173/a2dedac7-f827-494e-aab5-f9218a073b47",
+          "alt": "large-heap-dried-red-beans-min",
+          "isPrimary": false
+        }
+      ]
     }
   ]
 }

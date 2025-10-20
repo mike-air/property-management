@@ -18,7 +18,7 @@ const typeFilter = ref('all')
 const statusFilter = ref('all')
 const sortBy = ref('name')
 const sortOrder = ref<'asc' | 'desc'>('asc')
-const viewMode = ref<'table' | 'grid' | 'map'>('table')
+const viewMode = ref<'table' | 'grid' | 'map'>('grid')
 const searchFilters = ref({})
 
 // Confirmation dialog state
