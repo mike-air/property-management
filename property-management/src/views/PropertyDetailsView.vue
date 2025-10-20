@@ -3,8 +3,10 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePropertiesStore } from '../stores/properties'
 import { useToastStore } from '../stores/toast'
-import { ArrowLeft, Save, MapPin } from 'lucide-vue-next'
-import MapComponent from '../components/MapComponent.vue'
+import { ArrowLeft, Save, MapPin, FileText, AlertCircle, Loader2 } from 'lucide-vue-next'
+import VueLeafletMapComponent from '../components/VueLeafletMapComponent.vue'
+import ImageGallery from '../components/ImageGallery.vue'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
 
 const route = useRoute()
 const router = useRouter()
@@ -60,7 +62,9 @@ const loadProperty = async (id: number) => {
         address: property.value.address || ''
       }
     }
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to load property details'
+    toastStore.error(errorMessage)
     toastStore.error('Failed to load property details')
     router.push('/properties')
   } finally {
@@ -98,7 +102,8 @@ const saveProperty = async () => {
     toastStore.success('Property updated successfully')
     isEditing.value = false
   } catch (error) {
-    toastStore.error('Failed to update property')
+    const errorMessage = error instanceof Error ? error.message : 'Failed to update property'
+    toastStore.error(errorMessage)
   } finally {
     isSaving.value = false
   }
@@ -111,12 +116,6 @@ const formatPrice = (price: number, type: string) => {
   return `$${price.toLocaleString()}`
 }
 
-const getStatusBadge = (status: string) => {
-  if (status === 'available') {
-    return 'status-badge status-available'
-  }
-  return 'status-badge status-occupied'
-}
 </script>
 
 <template>
@@ -140,13 +139,27 @@ const getStatusBadge = (status: string) => {
       </div>
 
       <div v-if="isLoading" class="flex flex-col items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <p class="mt-4 text-gray-600">Loading property details...</p>
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+          <Loader2 class="w-8 h-8 text-blue-600 animate-spin" />
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Loading property details</h3>
+        <p class="text-gray-500">Please wait while we fetch the property information...</p>
       </div>
 
-      <div v-else-if="property" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Property Information -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div v-else-if="property" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Property Images -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900">Property Images</h2>
+                <p class="text-sm text-gray-600">Photos of the property</p>
+              </div>
+              <div class="p-6">
+                <ImageGallery :images="property.images || []" />
+              </div>
+            </div>
+
+            <!-- Property Information -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
           <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex justify-between items-start">
               <div>
@@ -181,154 +194,211 @@ const getStatusBadge = (status: string) => {
             </div>
           </div>
           <div class="p-6">
-            <!-- Basic Information -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                <input
-                  v-if="isEditing"
-                  v-model="formData.name"
-                  placeholder="Property name"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p v-else class="text-sm text-gray-900">{{ property.name }}</p>
+            <!-- Property Information with Clean Dividers -->
+            <div class="space-y-0">
+              <!-- Name -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Name</label>
+                  <div class="text-right">
+                    <input
+                      v-if="isEditing"
+                      v-model="formData.name"
+                      placeholder="Property name"
+                      class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    />
+                    <p v-else class="text-sm text-gray-900">{{ property.name }}</p>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
-                <select
-                  v-if="isEditing"
-                  v-model="formData.type"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="rental">Rental</option>
-                  <option value="sale">For Sale</option>
-                </select>
-                <p v-else class="text-sm text-gray-900 capitalize">{{ property.type }}</p>
+              <!-- Type -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Type</label>
+                  <div class="text-right">
+                    <Select v-if="isEditing" v-model="formData.type">
+                      <SelectTrigger class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="rental">Rental</SelectItem>
+                        <SelectItem value="sale">For Sale</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <span v-else 
+                      class="status-badge"
+                      :class="property.type === 'rental' ? 'status-rental' : 'status-sale'"
+                    >
+                      {{ property.type }}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Owner</label>
-                <input
-                  v-if="isEditing"
-                  v-model="formData.owner"
-                  placeholder="Owner name"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p v-else class="text-sm text-gray-900">{{ property.owner }}</p>
+              <!-- Owner -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Owner</label>
+                  <div class="text-right">
+                    <input
+                      v-if="isEditing"
+                      v-model="formData.owner"
+                      placeholder="Owner name"
+                      class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    />
+                    <p v-else class="text-sm text-gray-900">{{ property.owner }}</p>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Price</label>
-                <input
-                  v-if="isEditing"
-                  v-model.number="formData.price"
-                  type="number"
-                  placeholder="Price"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p v-else class="text-sm text-gray-900 price">{{ formatPrice(property.price, property.type) }}</p>
+              <!-- Price -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Price</label>
+                  <div class="text-right">
+                    <input
+                      v-if="isEditing"
+                      v-model.number="formData.price"
+                      type="number"
+                      placeholder="Price"
+                      class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    />
+                    <p v-else class="text-sm text-gray-900 font-medium">{{ formatPrice(property.price, property.type) }}</p>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select
-                  v-if="isEditing"
-                  v-model="formData.status"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="available">Available</option>
-                  <option value="occupied">Occupied</option>
-                </select>
-                <span v-else 
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                  :class="property.status === 'available' 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-red-100 text-red-800'"
-                >
-                  {{ property.status }}
-                </span>
-              </div>
-            </div>
-
-            <!-- Additional Details -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
-                <input
-                  v-if="isEditing"
-                  v-model.number="formData.bedrooms"
-                  type="number"
-                  placeholder="0"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p v-else class="text-sm text-gray-900">{{ property.bedrooms || 'N/A' }}</p>
+              <!-- Status -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Status</label>
+                  <div class="text-right">
+                    <Select v-if="isEditing" v-model="formData.status">
+                      <SelectTrigger class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="available">Available</SelectItem>
+                        <SelectItem value="occupied">Occupied</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <span v-else 
+                      class="status-badge"
+                      :class="property.status === 'available' ? 'status-available' : 'status-occupied'"
+                    >
+                      {{ property.status }}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
-                <input
-                  v-if="isEditing"
-                  v-model.number="formData.bathrooms"
-                  type="number"
-                  placeholder="0"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p v-else class="text-sm text-gray-900">{{ property.bathrooms || 'N/A' }}</p>
+              <!-- Bedrooms -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Bedrooms</label>
+                  <div class="text-right">
+                    <input
+                      v-if="isEditing"
+                      v-model.number="formData.bedrooms"
+                      type="number"
+                      placeholder="0"
+                      class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    />
+                    <p v-else class="text-sm text-gray-900">{{ property.bedrooms || 'N/A' }}</p>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Square Feet</label>
-                <input
-                  v-if="isEditing"
-                  v-model.number="formData.squareFeet"
-                  type="number"
-                  placeholder="0"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p v-else class="text-sm text-gray-900">{{ property.squareFeet ? `${property.squareFeet.toLocaleString()} sq ft` : 'N/A' }}</p>
-              </div>
-            </div>
-
-            <!-- Description -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-              <textarea
-                v-if="isEditing"
-                v-model="formData.description"
-                placeholder="Property description"
-                rows="3"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              ></textarea>
-              <p v-else class="text-sm text-gray-900">{{ property.description || 'No description provided' }}</p>
-            </div>
-
-            <!-- Coordinates -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Latitude</label>
-                <input
-                  v-if="isEditing"
-                  v-model.number="formData.latitude"
-                  type="number"
-                  step="0.000001"
-                  placeholder="0.000000"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p v-else class="text-sm text-gray-900">{{ property.latitude }}</p>
+              <!-- Bathrooms -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Bathrooms</label>
+                  <div class="text-right">
+                    <input
+                      v-if="isEditing"
+                      v-model.number="formData.bathrooms"
+                      type="number"
+                      placeholder="0"
+                      class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    />
+                    <p v-else class="text-sm text-gray-900">{{ property.bathrooms || 'N/A' }}</p>
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Longitude</label>
-                <input
-                  v-if="isEditing"
-                  v-model.number="formData.longitude"
-                  type="number"
-                  step="0.000001"
-                  placeholder="0.000000"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p v-else class="text-sm text-gray-900">{{ property.longitude }}</p>
+              <!-- Square Feet -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Square Feet</label>
+                  <div class="text-right">
+                    <input
+                      v-if="isEditing"
+                      v-model.number="formData.squareFeet"
+                      type="number"
+                      placeholder="0"
+                      class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    />
+                    <p v-else class="text-sm text-gray-900">{{ property.squareFeet ? `${property.squareFeet.toLocaleString()} sq ft` : 'N/A' }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="row-divider">
+                <div class="flex justify-between items-start">
+                  <label class="text-sm font-medium text-gray-700 mt-1">Description</label>
+                  <div class="text-right w-64">
+                    <textarea
+                      v-if="isEditing"
+                      v-model="formData.description"
+                      placeholder="Property description"
+                      rows="3"
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm resize-none"
+                    ></textarea>
+                    <p v-else-if="property.description" class="text-sm text-gray-900 text-left">{{ property.description }}</p>
+                    <div v-else class="flex items-center space-x-2 text-sm text-gray-500">
+                      <FileText class="w-4 h-4" />
+                      <span>No description provided</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Latitude -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Latitude</label>
+                  <div class="text-right">
+                    <input
+                      v-if="isEditing"
+                      v-model.number="formData.latitude"
+                      type="number"
+                      step="0.000001"
+                      placeholder="0.000000"
+                      class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    />
+                    <p v-else class="text-sm text-gray-900 font-mono">{{ property.latitude }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Longitude -->
+              <div class="row-divider">
+                <div class="flex justify-between items-center">
+                  <label class="text-sm font-medium text-gray-700">Longitude</label>
+                  <div class="text-right">
+                    <input
+                      v-if="isEditing"
+                      v-model.number="formData.longitude"
+                      type="number"
+                      step="0.000001"
+                      placeholder="0.000000"
+                      class="w-64 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                    />
+                    <p v-else class="text-sm text-gray-900 font-mono">{{ property.longitude }}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -344,7 +414,7 @@ const getStatusBadge = (status: string) => {
             <p class="text-sm text-gray-600">Property location on map</p>
           </div>
           <div class="p-6">
-            <MapComponent
+            <VueLeafletMapComponent
               :single-property="property"
               height="400px"
               :zoom="15"
@@ -354,13 +424,22 @@ const getStatusBadge = (status: string) => {
       </div>
 
       <div v-else class="text-center py-12">
-        <p class="text-gray-500 mb-4">Property not found</p>
-        <button 
-          @click="router.push('/properties')" 
-          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-        >
-          Back to Properties
-        </button>
+        <div class="flex flex-col items-center space-y-4">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+            <AlertCircle class="w-8 h-8 text-gray-400" />
+          </div>
+          <div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Property not found</h3>
+            <p class="text-gray-500 mb-4">The property you're looking for doesn't exist or has been removed</p>
+            <button 
+              @click="router.push('/properties')" 
+              class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+            >
+              <ArrowLeft class="w-4 h-4 mr-2" />
+              Back to Properties
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

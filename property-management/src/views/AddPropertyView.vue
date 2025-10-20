@@ -4,7 +4,10 @@ import { useRouter } from 'vue-router'
 import { usePropertiesStore } from '../stores/properties'
 import { useToastStore } from '../stores/toast'
 import { ArrowLeft, Save, RotateCcw } from 'lucide-vue-next'
-
+import ImageUpload from '../components/ImageUpload.vue'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select'
+import { Label } from '../components/ui/label'
+import type { PropertyImage } from '../services/api'
 const router = useRouter()
 const propertiesStore = usePropertiesStore()
 const toastStore = useToastStore()
@@ -23,7 +26,8 @@ const formData = ref({
   bedrooms: 0,
   bathrooms: 0,
   squareFeet: 0,
-  address: ''
+  address: '',
+  images: [] as PropertyImage[]
 })
 
 const errors = ref<Record<string, string>>({})
@@ -58,9 +62,33 @@ const validateForm = () => {
   return Object.keys(errors.value).length === 0
 }
 
+const validateCoordinates = () => {
+  const errors: Record<string, string> = {}
+  
+  // Validate latitude
+  if (formData.value.latitude < -90 || formData.value.latitude > 90) {
+    errors.latitude = 'Latitude must be between -90 and 90'
+  }
+  
+  // Validate longitude
+  if (formData.value.longitude < -180 || formData.value.longitude > 180) {
+    errors.longitude = 'Longitude must be between -180 and 180'
+  }
+  
+  return errors
+}
+
 const handleSubmit = async () => {
   if (!validateForm()) {
     toastStore.error('Please fix the form errors')
+    return
+  }
+  
+  // Validate coordinates
+  const coordinateErrors = validateCoordinates()
+  if (Object.keys(coordinateErrors).length > 0) {
+    errors.value = { ...errors.value, ...coordinateErrors }
+    toastStore.error('Please fix the coordinate errors')
     return
   }
   
@@ -70,7 +98,9 @@ const handleSubmit = async () => {
     await propertiesStore.createProperty(formData.value)
     toastStore.success('Property created successfully!')
     router.push('/properties')
-  } catch (error) {
+    } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create property'
+    toastStore.error(errorMessage)
     toastStore.error('Failed to create property')
   } finally {
     isLoading.value = false
@@ -90,7 +120,8 @@ const resetForm = () => {
     bedrooms: 0,
     bathrooms: 0,
     squareFeet: 0,
-    address: ''
+    address: '',
+    images: []
   }
   errors.value = {}
 }
@@ -152,13 +183,18 @@ const handleKeyPress = (event: KeyboardEvent) => {
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                  <Label class="block text-sm font-medium text-gray-700 mb-2">
                     Type <span class="text-red-500">*</span>
-                  </label>
-                  <select v-model="formData.type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
-                    <option value="rental">Rental</option>
-                    <option value="sale">For Sale</option>
-                  </select>
+                  </Label>
+                  <Select v-model="formData.type" required>
+                    <SelectTrigger class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="rental">Rental</SelectItem>
+                      <SelectItem value="sale">For Sale</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div>
@@ -194,11 +230,16 @@ const handleKeyPress = (event: KeyboardEvent) => {
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                  <select v-model="formData.status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option value="available">Available</option>
-                    <option value="occupied">Occupied</option>
-                  </select>
+                  <Label class="block text-sm font-medium text-gray-700 mb-2">Status</Label>
+                  <Select v-model="formData.status">
+                    <SelectTrigger class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="available">Available</SelectItem>
+                      <SelectItem value="occupied">Occupied</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div>
@@ -272,43 +313,49 @@ const handleKeyPress = (event: KeyboardEvent) => {
               </div>
             </div>
 
+            <!-- Property Images -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Property Images</h3>
+              <ImageUpload v-model="formData.images" />
+            </div>
+
             <!-- Location -->
             <div>
               <h3 class="text-lg font-semibold text-gray-900 mb-4">Location</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Latitude <span class="text-red-500">*</span>
-                  </label>
-                  <input
-                    v-model.number="formData.latitude"
-                    type="number"
-                    step="0.000001"
-                    placeholder="37.7749"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    :class="{ 'border-red-500': errors.latitude }"
-                    required
-                  />
-                  <p v-if="errors.latitude" class="mt-1 text-sm text-red-600">{{ errors.latitude }}</p>
-                  <p class="mt-1 text-xs text-gray-500">Range: -90 to 90</p>
-                </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Latitude <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        v-model.number="formData.latitude"
+                        type="number"
+                        step="0.000001"
+                        placeholder="37.7749"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        :class="{ 'border-red-500': errors.latitude }"
+                        required
+                      />
+                      <p v-if="errors.latitude" class="mt-1 text-sm text-red-600">{{ errors.latitude }}</p>
+                      <p class="mt-1 text-xs text-gray-500">Range: -90 to 90 (e.g., 37.7749 for San Francisco)</p>
+                    </div>
 
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Longitude <span class="text-red-500">*</span>
-                  </label>
-                  <input
-                    v-model.number="formData.longitude"
-                    type="number"
-                    step="0.000001"
-                    placeholder="-122.4194"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    :class="{ 'border-red-500': errors.longitude }"
-                    required
-                  />
-                  <p v-if="errors.longitude" class="mt-1 text-sm text-red-600">{{ errors.longitude }}</p>
-                  <p class="mt-1 text-xs text-gray-500">Range: -180 to 180</p>
-                </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Longitude <span class="text-red-500">*</span>
+                      </label>
+                      <input
+                        v-model.number="formData.longitude"
+                        type="number"
+                        step="0.000001"
+                        placeholder="-122.4194"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        :class="{ 'border-red-500': errors.longitude }"
+                        required
+                      />
+                      <p v-if="errors.longitude" class="mt-1 text-sm text-red-600">{{ errors.longitude }}</p>
+                      <p class="mt-1 text-xs text-gray-500">Range: -180 to 180 (e.g., -122.4194 for San Francisco)</p>
+                    </div>
               </div>
             </div>
 
