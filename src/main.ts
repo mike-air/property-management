@@ -3,6 +3,8 @@ import 'leaflet/dist/leaflet.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import Toast from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-sugar.css'
 
 import App from './App.vue'
 import router from './router'
@@ -28,6 +30,13 @@ app.component('LTileLayer', LTileLayer)
 app.component('LMarker', LMarker)
 app.component('LPopup', LPopup)
 app.component('LIcon', LIcon)
+
+// Register toast plugin with top positioning
+app.use(Toast, {
+  position: 'top-right',
+  duration: 5000,
+  pauseOnHover: true,
+})
 
 app.use(pinia)
 app.use(router)

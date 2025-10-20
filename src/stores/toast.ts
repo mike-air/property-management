@@ -1,24 +1,24 @@
 import { defineStore } from 'pinia'
-import { useToaster } from 'vue-toaster'
+import { useToast } from 'vue-toast-notification'
 
 export const useToastStore = defineStore('toast', () => {
-  const toaster = useToaster()
+  const toast = useToast()
 
-  // Convenience methods using vue-toaster
+  // Convenience methods using vue-toast-notification
   const success = (message: string) => {
-    toaster.success(message)
+    toast.success(message)
   }
 
   const error = (message: string) => {
-    toaster.error(message)
+    toast.error(message)
   }
 
   const warning = (message: string) => {
-    toaster.warning(message)
+    toast.warning(message)
   }
 
   const info = (message: string) => {
-    toaster.info(message)
+    toast.info(message)
   }
 
   return {

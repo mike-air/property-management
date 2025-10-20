@@ -2,7 +2,6 @@
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from './stores/auth'
-import { Toaster } from 'vue-toaster'
 import { User, LogOut } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -65,9 +64,6 @@ const handleLogout = async () => {
     <main :class="{ 'pt-0': !isAuthenticated }">
       <router-view />
     </main>
-
-    <!-- Toast Notifications -->
-    <Toaster position="top" />
   </div>
 </template>
 
