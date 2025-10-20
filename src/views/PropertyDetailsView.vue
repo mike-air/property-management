@@ -3,7 +3,7 @@ import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePropertiesStore } from '../stores/properties'
 import { useToastStore } from '../stores/toast'
-import { ArrowLeft, Save, MapPin, FileText, AlertCircle, Loader2, Bed, Bath, Square, Calendar, DollarSign, Home, User } from 'lucide-vue-next'
+import { ArrowLeft, MapPin, FileText, AlertCircle, Loader2, Bed, Bath, Square, Calendar, DollarSign, Home, User } from 'lucide-vue-next'
 import VueLeafletMapComponent from '../components/VueLeafletMapComponent.vue'
 
 const route = useRoute()
@@ -11,27 +11,9 @@ const router = useRouter()
 const propertiesStore = usePropertiesStore()
 const toastStore = useToastStore()
 
-const isEditing = ref(false)
 const isLoading = ref(false)
-const isSaving = ref(false)
 
 const property = computed(() => propertiesStore.currentProperty)
-
-// Form data
-const formData = ref({
-  name: '',
-  type: 'rental' as 'rental' | 'sale',
-  owner: '',
-  price: 0,
-  status: 'available' as 'available' | 'occupied',
-  latitude: 0,
-  longitude: 0,
-  description: '',
-  bedrooms: 0,
-  bathrooms: 0,
-  squareFeet: 0,
-  address: ''
-})
 
 onMounted(async () => {
   const propertyId = Number(route.params.id)
@@ -51,66 +33,12 @@ const loadProperty = async (id: number) => {
   isLoading.value = true
   try {
     await propertiesStore.fetchProperty(id)
-    if (property.value) {
-      formData.value = {
-        name: property.value.name,
-        type: property.value.type,
-        owner: property.value.owner,
-        price: property.value.price,
-        status: property.value.status,
-        latitude: property.value.latitude,
-        longitude: property.value.longitude,
-        description: property.value.description || '',
-        bedrooms: property.value.bedrooms || 0,
-        bathrooms: property.value.bathrooms || 0,
-        squareFeet: property.value.squareFeet || 0,
-        address: property.value.address || ''
-      }
-    }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to load property details'
     toastStore.error(errorMessage)
-    toastStore.error('Failed to load property details')
     router.push('/properties')
   } finally {
     isLoading.value = false
-  }
-}
-
-const toggleEdit = () => {
-  isEditing.value = !isEditing.value
-  if (!isEditing.value && property.value) {
-    // Reset form data when canceling edit
-    formData.value = {
-      name: property.value.name,
-      type: property.value.type,
-      owner: property.value.owner,
-      price: property.value.price,
-      status: property.value.status,
-      latitude: property.value.latitude,
-      longitude: property.value.longitude,
-      description: property.value.description || '',
-      bedrooms: property.value.bedrooms || 0,
-      bathrooms: property.value.bathrooms || 0,
-      squareFeet: property.value.squareFeet || 0,
-      address: property.value.address || ''
-    }
-  }
-}
-
-const saveProperty = async () => {
-  if (!property.value) return
-  
-  isSaving.value = true
-  try {
-    await propertiesStore.updateProperty(property.value.id, formData.value)
-    toastStore.success('Property updated successfully')
-    isEditing.value = false
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Failed to update property'
-    toastStore.error(errorMessage)
-  } finally {
-    isSaving.value = false
   }
 }
 
@@ -127,6 +55,12 @@ const requestTour = () => {
 
 const contactAgent = () => {
   toastStore.info('Contacting property agent...')
+}
+
+const editProperty = () => {
+  if (property.value) {
+    router.push(`/properties/${property.value.id}/edit`)
+  }
 }
 
 
@@ -372,29 +306,11 @@ const contactAgent = () => {
               
               <div class="space-y-4">
                 <button
-                  v-if="!isEditing"
-                  @click="toggleEdit"
+                  @click="editProperty"
                   class="w-full px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
                 >
                   Edit Property
                 </button>
-                
-                <div v-if="isEditing" class="space-y-3">
-                  <button
-                    @click="toggleEdit"
-                    class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    @click="saveProperty"
-                    :disabled="isSaving"
-                    class="w-full flex items-center justify-center space-x-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
-                  >
-                    <Save class="h-4 w-4" />
-                    <span>{{ isSaving ? 'Saving...' : 'Save Changes' }}</span>
-                  </button>
-                </div>
               </div>
             </div>
           </div>
