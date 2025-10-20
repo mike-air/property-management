@@ -1,8 +1,18 @@
 <template>
   <div class="advanced-search">
     <!-- Hero Search Section -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-lg overflow-hidden">
-      <div class="px-8 py-12">
+    <div class="relative rounded-xl shadow-lg overflow-hidden">
+      <!-- Background Image -->
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-blue-700/90">
+        <img
+          src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Property search background"
+          class="w-full h-full object-cover opacity-20"
+        />
+      </div>
+      
+      <!-- Content -->
+      <div class="relative px-8 py-12">
         <!-- Hero Text -->
         <div class="text-center mb-8">
           <h1 class="text-4xl font-bold text-white mb-4">
