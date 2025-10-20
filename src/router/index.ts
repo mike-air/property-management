@@ -3,6 +3,7 @@ import LoginView from '../views/LoginView.vue'
 import PropertiesView from '../views/PropertiesView.vue'
 import PropertyDetailsView from '../views/PropertyDetailsView.vue'
 import AddPropertyView from '../views/AddPropertyView.vue'
+import EditPropertyView from '../views/EditPropertyView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,7 +39,7 @@ const router = createRouter({
     {
       path: '/properties/:id/edit',
       name: 'edit-property',
-      component: PropertyDetailsView,
+      component: EditPropertyView,
       meta: { requiresAuth: true },
     },
   ],

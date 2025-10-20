@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted, watch } from 'vue'
+import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePropertiesStore } from '../stores/properties'
 import { useToastStore } from '../stores/toast'
@@ -40,12 +40,6 @@ onMounted(async () => {
   if (propertyId) {
     await loadProperty(propertyId)
   }
-  
-  // Check if we're on the edit route and enable edit mode
-  if (route.path.includes('/edit')) {
-    isEditing.value = true
-  }
-  
   // Initialize realtime updates
   propertiesStore.initializeRealtimeUpdates()
 })
@@ -53,15 +47,6 @@ onMounted(async () => {
 // Cleanup on unmount
 onUnmounted(() => {
   propertiesStore.stopRealtimeUpdates()
-})
-
-// Watch for route changes to handle edit mode
-watch(() => route.path, (newPath) => {
-  if (newPath.includes('/edit')) {
-    isEditing.value = true
-  } else {
-    isEditing.value = false
-  }
 })
 
 const loadProperty = async (id: number) => {
