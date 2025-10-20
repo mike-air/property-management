@@ -121,6 +121,14 @@ const formatPrice = (price: number, type: string) => {
   return `$${price.toLocaleString()}`
 }
 
+const requestTour = () => {
+  toastStore.success('Tour request sent! We\'ll contact you soon.')
+}
+
+const contactAgent = () => {
+  toastStore.info('Contacting property agent...')
+}
+
 
 
 </script>
@@ -153,7 +161,7 @@ const formatPrice = (price: number, type: string) => {
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         <!-- Main Image -->
         <div class="lg:col-span-2">
-          <div class="relative aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden">
+          <div class="relative aspect-4/3 bg-gray-100 rounded-xl overflow-hidden">
             <img
               v-if="property.images && property.images.length > 0"
               :src="property.images.find(img => img.isPrimary)?.url || property.images[0]?.url || ''"
@@ -391,6 +399,7 @@ const formatPrice = (price: number, type: string) => {
             </div>
           </div>
         </div>
+      </div>
     </div>
 
     <div v-else class="text-center py-24">
