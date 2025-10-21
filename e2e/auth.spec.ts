@@ -7,7 +7,6 @@ test.describe('Authentication', () => {
     // Should redirect to login page
     await expect(page).toHaveURL('/login')
     await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
-    await expect(page.locator('h2')).toHaveText('Login')
   })
 
   test('should login successfully with valid credentials', async ({ page }) => {
@@ -26,7 +25,7 @@ test.describe('Authentication', () => {
 
     // Wait for navigation to be visible and check user email
     await expect(page.locator('nav')).toBeVisible()
-    await expect(page.locator('text=admin@example.com')).toBeVisible()
+    await expect(page.locator('nav').getByText('admin@example.com')).toBeVisible()
   })
 
   test('should show error for invalid credentials', async ({ page }) => {
@@ -58,7 +57,7 @@ test.describe('Authentication', () => {
 
     // Should redirect to login page
     await expect(page).toHaveURL('/login')
-    await expect(page.locator('h2')).toHaveText('Login')
+    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
   })
 
   test('should persist login state on page refresh', async ({ page }) => {
@@ -77,6 +76,6 @@ test.describe('Authentication', () => {
     // Should still be logged in
     await expect(page).toHaveURL('/properties')
     await expect(page.locator('nav')).toBeVisible()
-    await expect(page.locator('text=admin@example.com')).toBeVisible()
+    await expect(page.locator('nav').getByText('admin@example.com')).toBeVisible()
   })
 })

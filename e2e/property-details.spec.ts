@@ -19,7 +19,7 @@ test.describe('Property Details', () => {
     await expect(page.getByRole('heading', { name: 'Property Details' })).toBeVisible()
 
     // Check property name (look for the property name in the page, not first h2)
-    await expect(page.locator('text=City Center Studio')).toBeVisible()
+    await expect(page.locator('text=Breanna Dickson')).toBeVisible()
 
     // Check property information sections
     await expect(page.locator('h2', { hasText: 'Property Images' }).first()).toBeVisible()

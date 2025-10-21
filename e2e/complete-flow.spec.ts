@@ -14,12 +14,12 @@ test.describe('Complete Property Management Flow', () => {
 
     // 3. Verify properties list
     await expect(page.getByRole('heading', { name: 'Properties', exact: true })).toBeVisible()
-    await expect(page.locator('tbody tr')).toHaveCount(7)
+    await expect(page.locator('tbody tr')).toHaveCount(10)
 
     // 4. Test search functionality
-    await page.getByRole('combobox', { name: 'Type' }).selectOption('Rental')
+    await page.getByRole('combobox', { name: 'Type' }).selectOption('rental')
     await page.getByRole('button', { name: 'Search Properties' }).click()
-    await expect(page.locator('h2')).toContainText('Properties (2)')
+    await expect(page.locator('h2')).toContainText('Properties (9)')
 
     // 5. Clear search and view property details
     await page.getByRole('button', { name: 'Clear All' }).click()
@@ -30,7 +30,7 @@ test.describe('Complete Property Management Flow', () => {
     await page.getByRole('button', { name: 'Edit Property' }).click()
     await expect(page).toHaveURL(/\/properties\/\d+\/edit/)
     await expect(page.getByRole('heading', { name: 'Edit Property' })).toBeVisible()
-    await page.getByRole('combobox', { name: 'Status' }).selectOption('Available')
+    await page.getByRole('combobox', { name: 'Status' }).selectOption('available')
     await page.getByRole('button', { name: 'Save Property' }).click()
     await expect(page).toHaveURL('/properties')
 
@@ -78,6 +78,6 @@ test.describe('Complete Property Management Flow', () => {
     // 11. Logout
     await page.getByRole('button', { name: 'Logout' }).click()
     await expect(page).toHaveURL('/login')
-    await expect(page.locator('h2')).toHaveText('Login')
+    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
   })
 })

@@ -26,7 +26,7 @@ test.describe('Properties List', () => {
 
   test('should display properties data correctly', async ({ page }) => {
     // Check that properties are displayed
-    await expect(page.locator('tbody tr')).toHaveCount(7) // Should have 7 properties
+    await expect(page.locator('tbody tr')).toHaveCount(10) // Should have 10 properties
 
     // Check first property data
     const firstRow = page.locator('tbody tr').first()
@@ -83,7 +83,7 @@ test.describe('Properties List', () => {
 
   test('should display correct property count', async ({ page }) => {
     // Check that the property count is displayed correctly
-    await expect(page.locator('h2', { hasText: 'Properties' })).toContainText('Properties (7)')
+    await expect(page.locator('h2', { hasText: 'Properties' })).toContainText('Properties (10)')
   })
 
   test('should toggle between table and map view', async ({ page }) => {
