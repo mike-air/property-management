@@ -8,7 +8,7 @@ test.describe('Properties List', () => {
     await page.getByRole('textbox', { name: 'Password' }).fill('password')
     await page.getByRole('button', { name: 'Continue' }).click()
     await expect(page).toHaveURL('/properties')
-    
+
     // Switch to table view for testing (default is now grid view)
     await page.getByRole('button', { name: 'Table' }).click()
   })

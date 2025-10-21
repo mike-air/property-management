@@ -57,7 +57,7 @@ const togglePasswordVisibility = () => {
         <!-- Logo/Brand -->
         <div class="mb-8">
           <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <div class="w-8 h-8 bg-blue-800 rounded-full flex items-center justify-center">
               <span class="text-white font-bold text-lg">P</span>
             </div>
             <span class="text-2xl font-bold text-gray-900">PropertyPro</span>
