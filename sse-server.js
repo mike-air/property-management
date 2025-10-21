@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import fs from 'fs'
 
 const app = express()
 const PORT = 3002
@@ -10,6 +11,18 @@ app.use(express.json())
 
 // Store connected clients
 const clients = new Set()
+
+// Read database to get actual property IDs
+function getDatabaseProperties() {
+  try {
+    const data = fs.readFileSync('db.json', 'utf8')
+    const db = JSON.parse(data)
+    return db.properties || []
+  } catch (error) {
+    console.error('Error reading database:', error)
+    return []
+  }
+}
 
 // SSE endpoint
 app.get('/api/events', (req, res) => {
@@ -54,35 +67,34 @@ function broadcastToClients(data) {
   })
 }
 
-// Simulate property updates every 30 seconds
+// Simulate property updates every 30 seconds using actual properties
 setInterval(() => {
-  const updateTypes = ['property_created', 'property_updated']
+  const properties = getDatabaseProperties()
+  
+  if (properties.length === 0) {
+    console.log('No properties found in database')
+    return
+  }
+  
+  const updateTypes = ['property_updated'] // Only update existing properties
   const randomType = updateTypes[Math.floor(Math.random() * updateTypes.length)]
   
-  const mockProperty = {
-    id: Math.floor(Math.random() * 1000),
-    name: `Property ${Math.floor(Math.random() * 100)}`,
-    type: Math.random() > 0.5 ? 'rental' : 'sale',
-    owner: `Owner ${Math.floor(Math.random() * 100)}`,
-    price: Math.floor(Math.random() * 500000) + 100000,
-    status: Math.random() > 0.5 ? 'available' : 'occupied',
-    latitude: 37.7749 + (Math.random() - 0.5) * 0.1,
-    longitude: -122.4194 + (Math.random() - 0.5) * 0.1,
-    description: 'Auto-generated property for testing',
-    bedrooms: Math.floor(Math.random() * 5) + 1,
-    bathrooms: Math.floor(Math.random() * 3) + 1,
-    squareFeet: Math.floor(Math.random() * 2000) + 500,
-    address: `${Math.floor(Math.random() * 9999)} Test Street`,
-    createdAt: new Date().toISOString(),
+  // Pick a random existing property
+  const randomProperty = properties[Math.floor(Math.random() * properties.length)]
+  
+  // Create a slight modification to simulate an update
+  const updatedProperty = {
+    ...randomProperty,
+    price: randomProperty.price + Math.floor(Math.random() * 100) - 50, // Small price change
     updatedAt: new Date().toISOString()
   }
 
   const event = {
     type: randomType,
-    property: mockProperty
+    property: updatedProperty
   }
 
-  console.log(`Broadcasting ${randomType} event:`, mockProperty.name)
+  console.log(`Broadcasting ${randomType} event: Property ${updatedProperty.id}`)
   broadcastToClients(event)
 }, 30000) // Every 30 seconds
 
