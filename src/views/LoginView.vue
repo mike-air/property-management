@@ -51,7 +51,7 @@ const togglePasswordVisibility = () => {
 
 <template>
   <div class="min-h-screen bg-white flex">
-    <div class="flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-20 xl:px-24">
+    <div class="w-full lg:w-1/3 flex flex-col justify-center px-4 sm:px-6 lg:px-20 xl:px-24">
       <div class="mx-auto w-full max-w-sm lg:w-96">
         <div class="mb-8">
           <div class="flex items-center space-x-2">
@@ -134,7 +134,7 @@ const togglePasswordVisibility = () => {
       </div>
     </div>
 
-    <div class="hidden lg:block lg:flex-1 relative">
+    <div class="hidden lg:block lg:w-2/3 relative">
       <div class="absolute inset-0">
         <img
         src="/bg.jpg"
