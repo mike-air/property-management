@@ -4,12 +4,12 @@ test.describe('Complete Property Management Flow', () => {
   test('should complete full user journey', async ({ page }) => {
     // 1. Start at login page
     await page.goto('/login')
-    await expect(page.getByRole('heading', { name: 'Property Management' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
 
     // 2. Login
     await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.com')
     await page.getByRole('textbox', { name: 'Password' }).fill('password')
-    await page.getByRole('button', { name: 'Sign In' }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
     await expect(page).toHaveURL('/properties')
 
     // 3. Verify properties list
@@ -27,11 +27,12 @@ test.describe('Complete Property Management Flow', () => {
     await expect(page.getByRole('heading', { name: 'Property Details' })).toBeVisible()
 
     // 6. Edit property
-    await page.getByRole('button', { name: 'Edit' }).click()
+    await page.getByRole('button', { name: 'Edit Property' }).click()
+    await expect(page).toHaveURL(/\/properties\/\d+\/edit/)
     await expect(page.getByRole('heading', { name: 'Edit Property' })).toBeVisible()
     await page.getByRole('combobox', { name: 'Status' }).selectOption('Available')
-    await page.getByRole('button', { name: 'Save' }).click()
-    await expect(page.getByRole('heading', { name: 'Property Details' })).toBeVisible()
+    await page.getByRole('button', { name: 'Save Property' }).click()
+    await expect(page).toHaveURL('/properties')
 
     // 7. Go back to properties list
     await page.getByRole('button', { name: 'Back to Properties' }).click()

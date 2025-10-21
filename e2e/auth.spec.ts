@@ -6,7 +6,7 @@ test.describe('Authentication', () => {
 
     // Should redirect to login page
     await expect(page).toHaveURL('/login')
-    await expect(page.getByRole('heading', { name: 'Property Management' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
     await expect(page.locator('h2')).toHaveText('Login')
   })
 
@@ -18,7 +18,7 @@ test.describe('Authentication', () => {
     await page.getByRole('textbox', { name: 'Password' }).fill('password')
 
     // Click sign in button
-    await page.getByRole('button', { name: 'Sign In' }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
 
     // Should redirect to properties page
     await expect(page).toHaveURL('/properties')
@@ -37,7 +37,7 @@ test.describe('Authentication', () => {
     await page.getByRole('textbox', { name: 'Password' }).fill('wrongpassword')
 
     // Click sign in button
-    await page.getByRole('button', { name: 'Sign In' }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
 
     // Should stay on login page
     await expect(page).toHaveURL('/login')
@@ -48,7 +48,7 @@ test.describe('Authentication', () => {
     await page.goto('/login')
     await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.com')
     await page.getByRole('textbox', { name: 'Password' }).fill('password')
-    await page.getByRole('button', { name: 'Sign In' }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
 
     // Verify we're logged in
     await expect(page).toHaveURL('/properties')
@@ -66,7 +66,7 @@ test.describe('Authentication', () => {
     await page.goto('/login')
     await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.com')
     await page.getByRole('textbox', { name: 'Password' }).fill('password')
-    await page.getByRole('button', { name: 'Sign In' }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
 
     // Verify we're on properties page
     await expect(page).toHaveURL('/properties')

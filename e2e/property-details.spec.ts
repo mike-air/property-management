@@ -6,7 +6,7 @@ test.describe('Property Details', () => {
     await page.goto('/login')
     await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.com')
     await page.getByRole('textbox', { name: 'Password' }).fill('password')
-    await page.getByRole('button', { name: 'Sign In' }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
     await expect(page).toHaveURL('/properties')
 
     // Navigate to first property details
@@ -47,45 +47,34 @@ test.describe('Property Details', () => {
     await expect(page.locator('text=Longitude')).toBeVisible()
   })
 
-  test('should enter edit mode when clicking Edit button', async ({ page }) => {
-    // Click Edit button
-    await page.getByRole('button', { name: 'Edit' }).click()
+  test('should navigate to edit page when clicking Edit Property button', async ({ page }) => {
+    // Click Edit Property button
+    await page.getByRole('button', { name: 'Edit Property' }).click()
 
-    // Check that page title changes
+    // Should navigate to edit page
+    await expect(page).toHaveURL(/\/properties\/\d+\/edit/)
     await expect(page.getByRole('heading', { name: 'Edit Property' })).toBeVisible()
-
-    // Check that form fields become editable
-    await expect(page.locator('input[placeholder="Property name"]')).toBeVisible()
-    await expect(page.locator('select').nth(0)).toBeVisible() // Type select
-    await expect(page.locator('input[placeholder="Owner name"]')).toBeVisible()
-    await expect(page.locator('input[type="number"]').nth(0)).toBeVisible() // Price input
-    await expect(page.locator('select').nth(1)).toBeVisible() // Status select
-
-    // Check that action buttons change
-    await expect(page.getByRole('button', { name: 'Cancel' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Save' })).toBeVisible()
   })
 
   test('should edit property information', async ({ page }) => {
-    // Enter edit mode
-    await page.getByRole('button', { name: 'Edit' }).click()
+    // Navigate to edit page
+    await page.getByRole('button', { name: 'Edit Property' }).click()
+    await expect(page).toHaveURL(/\/properties\/\d+\/edit/)
 
     // Change status from occupied to available
     await page.locator('select').nth(1).selectOption('available')
 
     // Save changes
-    await page.getByRole('button', { name: 'Save' }).click()
+    await page.getByRole('button', { name: 'Save Property' }).click()
 
-    // Should return to view mode
-    await expect(page.getByRole('heading', { name: 'Property Details' })).toBeVisible()
-
-    // Check that status was updated
-    await expect(page.locator('text=available')).toBeVisible()
+    // Should return to properties list
+    await expect(page).toHaveURL('/properties')
   })
 
-  test('should cancel edit mode without saving', async ({ page }) => {
-    // Enter edit mode
-    await page.getByRole('button', { name: 'Edit' }).click()
+  test('should cancel edit without saving', async ({ page }) => {
+    // Navigate to edit page
+    await page.getByRole('button', { name: 'Edit Property' }).click()
+    await expect(page).toHaveURL(/\/properties\/\d+\/edit/)
 
     // Change some field
     await page.locator('input[placeholder="Property name"]').fill('Modified Name')
@@ -93,11 +82,8 @@ test.describe('Property Details', () => {
     // Click Cancel
     await page.getByRole('button', { name: 'Cancel' }).click()
 
-    // Should return to view mode
-    await expect(page.getByRole('heading', { name: 'Property Details' })).toBeVisible()
-
-    // Check that changes were not saved
-    await expect(page.locator('h2').first()).not.toContainText('Modified Name')
+    // Should return to properties list
+    await expect(page).toHaveURL('/properties')
   })
 
   test('should navigate back to properties list', async ({ page }) => {

@@ -6,7 +6,7 @@ test.describe('Advanced Search', () => {
     await page.goto('/login')
     await page.getByRole('textbox', { name: 'Email' }).fill('admin@example.com')
     await page.getByRole('textbox', { name: 'Password' }).fill('password')
-    await page.getByRole('button', { name: 'Sign In' }).click()
+    await page.getByRole('button', { name: 'Continue' }).click()
     await expect(page).toHaveURL('/properties')
   })
 
