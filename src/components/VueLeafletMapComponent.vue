@@ -176,17 +176,18 @@ const onMapClick = (event: any) => {
 }
 
 const onMarkerClick = (property: Property) => {
-  emit('markerClick', property)
+  // Don't emit markerClick - let the popup handle navigation
+  console.log('Marker clicked:', property.name)
 }
 
 const viewProperty = (id: number) => {
-  // This will be handled by the parent component
-  console.log('View property:', id)
+  // Navigate to property details
+  window.location.href = `/properties/${id}`
 }
 
 const editProperty = (id: number) => {
-  // This will be handled by the parent component
-  console.log('Edit property:', id)
+  // Navigate to edit property page
+  window.location.href = `/properties/${id}/edit`
 }
 
 const formatPrice = (price: number, type: string) => {

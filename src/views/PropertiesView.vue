@@ -126,10 +126,6 @@ const formatPrice = (price: number, type: string) => {
   return `$${price.toLocaleString()}`
 }
 
-const onMapMarkerClick = (property: Property) => {
-  viewProperty(property.id as number)
-}
-
 const handleAdvancedSearch = (filters: SearchFilters) => {
   searchFilters.value = filters
   // Apply the filters to the store - this will trigger reactive updates
@@ -486,7 +482,6 @@ const handleSaveSearch = (filters: SearchFilters) => {
               :properties="properties"
               height="384px"
               :zoom="10"
-              @marker-click="onMapMarkerClick"
             />
           </div>
 

@@ -219,6 +219,41 @@
       "squareFeet": 24,
       "address": "Ut anim in laborum t",
       "images": []
+    },
+    {
+      "id": "white-house",
+      "name": "The White House",
+      "type": "sale",
+      "owner": "United States Government",
+      "price": 50000000,
+      "status": "available",
+      "latitude": 38.8977,
+      "longitude": -77.0365,
+      "description": "Historic presidential residence with 132 rooms, 35 bathrooms, and 6 levels. Features the Oval Office, Rose Garden, and South Lawn. Perfect for diplomatic meetings and state dinners.",
+      "bedrooms": 16,
+      "bathrooms": 35,
+      "squareFeet": 55000,
+      "address": "1600 Pennsylvania Avenue NW, Washington, DC 20500",
+      "images": [
+        {
+          "id": "img_white_house_1",
+          "url": "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800&h=600&fit=crop",
+          "alt": "The White House exterior view",
+          "isPrimary": true
+        },
+        {
+          "id": "img_white_house_2",
+          "url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+          "alt": "White House Rose Garden",
+          "isPrimary": false
+        },
+        {
+          "id": "img_white_house_3",
+          "url": "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&h=600&fit=crop",
+          "alt": "Oval Office interior",
+          "isPrimary": false
+        }
+      ],
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z"
     }
-  ]
-}
