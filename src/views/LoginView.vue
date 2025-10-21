@@ -51,10 +51,8 @@ const togglePasswordVisibility = () => {
 
 <template>
   <div class="min-h-screen bg-white flex">
-    <!-- Left Side - Login Form -->
     <div class="flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-20 xl:px-24">
       <div class="mx-auto w-full max-w-sm lg:w-96">
-        <!-- Logo/Brand -->
         <div class="mb-8">
           <div class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-blue-800 rounded-full flex items-center justify-center">
@@ -64,14 +62,11 @@ const togglePasswordVisibility = () => {
           </div>
         </div>
 
-        <!-- Sign In Title -->
         <div class="mb-8">
           <h1 class="text-3xl font-bold text-gray-900">Sign in</h1>
         </div>
 
-        <!-- Login Form -->
         <form @submit.prevent="handleLogin" class="space-y-6">
-          <!-- Email Field -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
               Email Address<span class="text-red-500">*</span>
@@ -87,7 +82,6 @@ const togglePasswordVisibility = () => {
             />
           </div>
 
-          <!-- Password Field -->
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
               Password<span class="text-red-500">*</span>
@@ -113,7 +107,6 @@ const togglePasswordVisibility = () => {
             </div>
           </div>
 
-          <!-- Sign In Button -->
           <button
             type="submit"
             class="w-full flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -126,7 +119,6 @@ const togglePasswordVisibility = () => {
 
         
 
-        <!-- Terms -->
         <div class="mt-8 text-center">
           <p class="text-xs text-gray-500">
             By submitting, I accept PropertyPro's 
@@ -134,7 +126,6 @@ const togglePasswordVisibility = () => {
           </p>
         </div>
 
-        <!-- Demo Credentials -->
         <div class="mt-6 p-4 bg-gray-50 rounded-lg">
           <p class="text-sm font-medium text-gray-900 mb-2">Demo Credentials:</p>
           <p class="text-sm text-gray-600">Email: admin@example.com</p>
@@ -143,7 +134,6 @@ const togglePasswordVisibility = () => {
       </div>
     </div>
 
-    <!-- Right Side - Lifestyle Image -->
     <div class="hidden lg:block lg:flex-1 relative">
       <div class="absolute inset-0">
         <img
@@ -152,12 +142,10 @@ const togglePasswordVisibility = () => {
           class="w-full h-full object-cover"
         />
       </div>
-      <!-- Optional overlay for better text contrast if needed -->
       <div class="absolute inset-0 bg-gradient-to-l from-transparent to-white/10"></div>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* All styles now handled by Tailwind classes */
 </style>

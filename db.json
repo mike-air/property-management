@@ -171,6 +171,22 @@
           "isPrimary": true
         }
       ]
+    },
+    {
+      "id": "543e",
+      "name": "Ullam deserunt quibu",
+      "type": "rental",
+      "owner": "Placeat possimus s",
+      "price": 12,
+      "status": "available",
+      "latitude": 89,
+      "longitude": 92,
+      "description": "Quos commodi veniam",
+      "bedrooms": 52,
+      "bathrooms": 0,
+      "squareFeet": 48,
+      "address": "Corrupti amet ut m",
+      "images": []
     }
   ]
 }

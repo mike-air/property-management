@@ -144,7 +144,7 @@ class SSEService {
           toastStore.warning(`Property "${propertyName}" was removed`)
           break
       }
-    } catch (_error) {
+    } catch {
       // Fallback to console if Pinia isn't available
       console.log(`Property update: ${event.type} - ${propertyName}`)
     }
@@ -169,7 +169,7 @@ class SSEService {
       try {
         const toastStore = useToastStore()
         toastStore.error('Lost connection to real-time updates')
-      } catch (_error) {
+      } catch {
         console.error('Lost connection to real-time updates')
       }
     }
