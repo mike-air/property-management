@@ -477,11 +477,11 @@ const handleSaveSearch = (filters: SearchFilters) => {
           </div>
 
           <!-- Map View -->
-          <div v-else-if="viewMode === 'map'" class="h-96">
+          <div v-else-if="viewMode === 'map'" class="h-[600px]">
             <VueLeafletMapComponent
               :properties="properties"
-              height="384px"
-              :zoom="10"
+              height="600px"
+              :zoom="12"
             />
           </div>
 

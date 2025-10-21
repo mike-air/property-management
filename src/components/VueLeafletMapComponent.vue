@@ -165,6 +165,18 @@ const mapCenter = computed(() => {
 // Methods
 const onMapReady = () => {
   console.log('Map is ready')
+  
+  // If we have properties, fit bounds to show them all
+  if (props.properties.length > 0) {
+    setTimeout(() => {
+      const bounds = props.properties.map(p => [p.latitude, p.longitude])
+      map.value.leafletObject.fitBounds(bounds, { 
+        padding: [50, 50],
+        maxZoom: 15
+      })
+    }, 100) // Small delay to ensure map is fully rendered
+  }
+  
   emit('mapReady')
 }
 
@@ -232,9 +244,12 @@ const getMarkerIcon = (property: Property) => {
 // Watch for changes in properties to update map bounds
 watch(() => props.properties, (newProperties) => {
   if (newProperties.length > 0 && map.value) {
-    // Fit map to show all properties
+    // Fit map to show all properties with better padding
     const bounds = newProperties.map(p => [p.latitude, p.longitude])
-    map.value.leafletObject.fitBounds(bounds, { padding: [20, 20] })
+    map.value.leafletObject.fitBounds(bounds, { 
+      padding: [50, 50], // More padding for better visibility
+      maxZoom: 15 // Don't zoom in too much if properties are close
+    })
   }
 }, { deep: true })
 
